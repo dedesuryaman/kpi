@@ -1,0 +1,15 @@
+.btn-primary {
+    color: #fff;
+    background-color: #00408c;
+    border-color: #191310;
+}
+
+.btn-light {
+    color: #000;
+    background-color: #eff2f7;
+    border-color: #ced4da;
+}
+
+a {
+    color: #056c95;
+}

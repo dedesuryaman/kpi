@@ -1,0 +1,14 @@
+Matrix Hak Akses
+Modul	Super Admin	HRD	Director	Supervisor	Employee
+Dashboard	✅	✅	✅	✅	✅
+Employee	CRUD	CRUD	View	Team	Self
+Division	CRUD	CRUD	View	View	-
+Position	CRUD	CRUD	View	View	-
+KPI Master	CRUD	CRUD	View	View	View
+KPI Indicator	CRUD	CRUD	View	View	View
+Assessment	CRUD	CRUD	View	Team	Self
+KPI Result	CRUD	CRUD	View	Team	Self
+Reports	All	All	Company	Team	Self
+User Management	CRUD	-	-	-	-
+Roles & Permissions	CRUD	-	-	-	-
+Settings	CRUD	-	-	-	-

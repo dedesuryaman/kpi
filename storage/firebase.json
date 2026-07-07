@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "dadali-campernik-kbb",
+  "private_key_id": "6d45b056b01b5c29f54b578ec8926c6a7e57acd2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDDXz6G4+LNL8WC\nccVjc/xAoHAN9Wf+9sXAsvJwDa80LPFwJimOekHn3gwb8KMsU2rWsH3mjl+GZZWz\nUEV+D6bFRnM8zbQIaorixjGuKBReIjX9DoZwz4zK9q//nYwSbICMKuSam1fLXBh9\nxhW3pSppnByUYR6fXvOkIajgnkgGQlUztvsdR01Npkbif4MgqBoxLDAH/kT0eLKV\n6YCRlVUv5ylR2OFc2I+hExy0NUQrXp8igJJY6HwnO5B+7F7HaVOmt/H/taRkK6MB\nef9VQ2hV7yavEA7XlZqvrPWlIhvg42b8FLBRhIgQ3oSdHatPzs4wLj/RlJi0lTG/\nFAisxyrNAgMBAAECggEAAwOeaEAuS3+ZQrlaHqjCA3DmNv+U/pI/O/PsI8NA83iz\nszOnhaRIYtkiYzD2d38u9rJ2MsnPWqMJE6E2p+qlEPCUuQ4BtnUxq4ImxJAnkPSN\nVC2L8Jlxy4om7iDiXGtnnUymcRCEotAgLEU+KF09jFplTNBlw6GC9+0xWOEgQoEZ\nvnfwfJcn4Yz/UFJJAV4xnKBWxqv0ge66gaJzfsGrkxKZOG6k2L4kAQ6I0ARc9T9l\nd0ku9NasJlhJvqKio7lP14sKtmLIqCRF71Zbsv4q0iXSPUwBaVU9G2KCOTRRguHy\nLV7sxUo8fngCvmuaF8ys/f/EogbQbSbsK7IMN5PGsQKBgQDlR2jbzYPdbgTdN0YW\nzNu4kcHVBw8r9f1BPPpbv6/lg51Tb7jS85aEB0KupJLUttl9AJ6ff5AyXo5wLJ1P\n9hFzrDgAwOkqlui8RFGLcySPzcesfKqdKZ8WBVYsc4FwXei1JyM0LEJ9whLhjZF9\n+WENXkNFqem3Jc9EtC8qrnlH3QKBgQDaJDbsmhpfw7nA8KM9HDFpKJh7iU3/+jk/\ngL0QIczgg8wCJGl0Pq61XAZve5kobWd6B2LTgr23ZCyQx7HMEtPGhuzV2vpgoLzx\nQrpYqRSIfC0IsaYE3kOL6dcbTSF4S2SZUYKHdrinJs+MwUPt2ma3bbwlJPWFl/f0\nm8VjRKw3sQKBgQDWt+R0jGfktAbsILqL2bgfhqku1liYA9vz/6Y6zC5vU62/mM5P\nCH46EQ6avVcgzEirryveFTm2YiUk2jNM0hYP7QXZdtAl6YP15Ek1vlRMNBu95lZl\nrrfkiITmRhm/YMLw+8EVOCng2iKShuDtR+FjApcfo3tT4J3WKqRNZW4BJQKBgQCC\nl1+SMYdMgV341ZbEBNbHv5fZjQ93CROwop+Mws9mMUC2n5nKD6SDyj3IC9Ra0XQ7\nJ6TQPtrYqU3MtuAH7dV+alPqixeNNW0nee0ZGs/CDaTgKYncLDt/zVQLchdxbqEg\n8B0Wf8p3ttJVz3WdNTx832LdUczyV1IHzCFVFk2LYQKBgQChj1QPnoIj4czAUGXC\nU11VOINslPeWout5TNYr2O0ryKy6cWS4flQ8N+RXvpVO2jsvKfzrfz05TPn4Og6b\nY5h7E2L+nn2YFrDvBaDfoUxGREcC2BUGQPy7Sa6TLPLfb/0DbycRCmi2A97Fsn27\nFjgGxejhF9Pt3B3nk/8pBvfY5Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@dadali-campernik-kbb.iam.gserviceaccount.com",
+  "client_id": "102524505120160849712",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40dadali-campernik-kbb.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

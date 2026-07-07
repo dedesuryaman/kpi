@@ -1,0 +1,2024 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Documentation DADALI-CAMPERNIK API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/mobile/app/config": {
+            "get": {
+                "tags": [
+                    "App"
+                ],
+                "summary": "Get konfigurasi aplikasi",
+                "description": "Mengambil informasi versi aplikasi, maintenance, dan support",
+                "operationId": "f62c21d3240e141b22147f9e5d62031c",
+                "parameters": [
+                    {
+                        "name": "platform",
+                        "in": "query",
+                        "description": "Platform aplikasi",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "android",
+                            "enum": [
+                                "android",
+                                "ios",
+                                "web"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "app_name": {
+                                                    "type": "string",
+                                                    "example": "MyApp Mobile"
+                                                },
+                                                "platform": {
+                                                    "type": "string",
+                                                    "example": "android"
+                                                },
+                                                "version": {
+                                                    "properties": {
+                                                        "current": {
+                                                            "type": "string",
+                                                            "example": "1.4.2"
+                                                        },
+                                                        "minimum": {
+                                                            "type": "string",
+                                                            "example": "1.3.0"
+                                                        },
+                                                        "build": {
+                                                            "type": "string",
+                                                            "example": "42"
+                                                        },
+                                                        "force_update": {
+                                                            "type": "boolean",
+                                                            "example": true
+                                                        },
+                                                        "update_url": {
+                                                            "type": "string",
+                                                            "example": "https://play.google.com/store/apps/details"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "maintenance": {
+                                                    "properties": {
+                                                        "status": {
+                                                            "type": "boolean",
+                                                            "example": false
+                                                        },
+                                                        "message": {
+                                                            "type": "string",
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "release_notes": {
+                                                    "type": "string",
+                                                    "example": "Bug fixing"
+                                                },
+                                                "support": {
+                                                    "properties": {
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "support@myapp.com"
+                                                        },
+                                                        "whatsapp": {
+                                                            "type": "string",
+                                                            "example": "628123456789"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Config tidak ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/mobile/app/check-version": {
+            "post": {
+                "tags": [
+                    "App"
+                ],
+                "summary": "Cek versi aplikasi",
+                "description": "Validasi versi aplikasi terhadap versi minimum dan versi terbaru",
+                "operationId": "64d236d5eb71274dcaf4128f0203739a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "platform",
+                                    "version"
+                                ],
+                                "properties": {
+                                    "platform": {
+                                        "type": "string",
+                                        "enum": [
+                                            "android",
+                                            "ios",
+                                            "web"
+                                        ],
+                                        "example": "android"
+                                    },
+                                    "version": {
+                                        "type": "string",
+                                        "example": "1.2.0"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK / Force Update / Blocked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "force_update"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Versi aplikasi sudah tidak didukung"
+                                        },
+                                        "update_url": {
+                                            "type": "string",
+                                            "example": "https://play.google.com/store/apps/details"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user menggunakan email dan password",
+                "operationId": "dd51a484b7fa0f97c7680fdbde14cf5f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "fcm_token": {
+                                        "type": "string",
+                                        "example": "dHSu2a1sdfwq0oEXAMPLEfcmToken123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login berhasil"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "33|i9WddcEnTSY5kinmw52yoA7Fpnpb2M7V25pK6aeJd6827832"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 3
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Budi"
+                                                        },
+                                                        "username": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "budi@gmail.com"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "address": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "email_verified_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "status": {
+                                                            "type": "string",
+                                                            "example": "active"
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-12-12T04:10:45.000000Z"
+                                                        },
+                                                        "deleted_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "avatar": {
+                                                            "type": "string",
+                                                            "example": "avatars/XKRrDWndZDgtTLTbQsSAsJvJvQLtwS1dBr57v3D3.png"
+                                                        },
+                                                        "device_id": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "fcm_token": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "last_login_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "last_login_ip": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "is_online": {
+                                                            "type": "integer",
+                                                            "example": 0
+                                                        },
+                                                        "api_token": {
+                                                            "type": "string",
+                                                            "example": null,
+                                                            "nullable": true
+                                                        },
+                                                        "roles": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 5
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "example": "opd_pengawas"
+                                                                    },
+                                                                    "guard_name": {
+                                                                        "type": "string",
+                                                                        "example": "web"
+                                                                    },
+                                                                    "man": {
+                                                                        "type": "integer",
+                                                                        "example": 1
+                                                                    },
+                                                                    "show_name": {
+                                                                        "type": "string",
+                                                                        "example": "OPD Pengawas"
+                                                                    },
+                                                                    "created_at": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2025-11-26T05:22:43.000000Z"
+                                                                    },
+                                                                    "updated_at": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2025-11-26T05:22:43.000000Z"
+                                                                    },
+                                                                    "pivot": {
+                                                                        "properties": {
+                                                                            "model_type": {
+                                                                                "type": "string",
+                                                                                "example": "App\\\\Models\\\\User"
+                                                                            },
+                                                                            "model_id": {
+                                                                                "type": "integer",
+                                                                                "example": 3
+                                                                            },
+                                                                            "role_id": {
+                                                                                "type": "integer",
+                                                                                "example": 5
+                                                                            }
+                                                                        },
+                                                                        "type": "object"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "timestamp": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-12-16T06:17:33.935441Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Email atau password salah"
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "description": "Menghapus token akses user yang sedang login (Sanctum).",
+                "operationId": "df9bdc6c7a6d9f20b983526b2ec0f698",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Loged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token invalid atau tidak ada"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get authenticated user profile",
+                "description": "Returns current authenticated user",
+                "operationId": "getUserProfile",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "phone": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/change-password": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Change user password",
+                "description": "Ganti password user yang sudah login",
+                "operationId": "de9dbe542bbcbd382498edf7cd0500c0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "current_password",
+                                    "new_password"
+                                ],
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string",
+                                        "example": "OldPassword123!"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "NewPassword123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password berhasil diubah",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password berhasil diubah."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal / password lama salah",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password lama tidak sesuai."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/dashboard": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Get dashboard data",
+                "description": "Mengambil data dashboard untuk user yang sedang login, termasuk informasi profile dan status proyek.",
+                "operationId": "73eb4217a0b8b3e442aa9b48349ebad3",
+                "responses": {
+                    "200": {
+                        "description": "Dashboard data retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dashboard data"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "profile": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Abdul"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "abdul@example.com"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "example": "08123456789"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "project_status": {
+                                                    "properties": {
+                                                        "total_proyek": {
+                                                            "type": "integer",
+                                                            "example": 25
+                                                        },
+                                                        "total_on_progress": {
+                                                            "type": "integer",
+                                                            "example": 10
+                                                        },
+                                                        "total_selesai": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "total_active": {
+                                                            "type": "integer",
+                                                            "example": 20
+                                                        },
+                                                        "total_inactive": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "total_dokumen": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "total_pengawasan": {
+                                                            "type": "integer",
+                                                            "example": 30
+                                                        },
+                                                        "total_kendala": {
+                                                            "type": "integer",
+                                                            "example": 2
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Token tidak valid"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/dokumens/{pekerjaan_id}": {
+            "get": {
+                "tags": [
+                    "Dokumen"
+                ],
+                "summary": "Data Dokumen Pekerjaan",
+                "description": "-",
+                "operationId": "bobile/dokumens",
+                "parameters": [
+                    {
+                        "name": "pekerjaan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model dokumen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/dokumen/{dokumen_id}": {
+            "get": {
+                "tags": [
+                    "Dokumen"
+                ],
+                "summary": "Data Dokumen Pekerjaan",
+                "description": "-",
+                "operationId": "bobile/dokumen",
+                "parameters": [
+                    {
+                        "name": "dokumen_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model dokumen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/kegiatans": {
+            "get": {
+                "tags": [
+                    "Kegiatan"
+                ],
+                "summary": "Listing Data Kegiatan",
+                "description": "-",
+                "operationId": "bobile/kegiatans",
+                "responses": {
+                    "default": {
+                        "description": "return model kegiatans"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/kegiatan/{id}": {
+            "get": {
+                "tags": [
+                    "Kegiatan"
+                ],
+                "summary": "Data Kegiatan",
+                "description": "-",
+                "operationId": "bobile/kegiatan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model kegiatan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/laporan/kendalas": {
+            "get": {
+                "tags": [
+                    "LaporanKendala"
+                ],
+                "summary": "History Laporan Kendala",
+                "description": "List history laproan kendala dengan search",
+                "operationId": "mobile/kendalas",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Keyword pencarian (judul atau nama proyek)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "cuaca badai"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return list hstory kendala"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/laporan/kendala": {
+            "post": {
+                "tags": [
+                    "LaporanKendala"
+                ],
+                "summary": "Laporan khusus kendala atau insidentil",
+                "operationId": "db08fc2673dd7c1c8992f4b795d4bb9d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "pekerjaan_id",
+                                    "foto_url",
+                                    "tipe_masalah",
+                                    "judul",
+                                    "deskripsi"
+                                ],
+                                "properties": {
+                                    "pekerjaan_id": {
+                                        "type": "integer",
+                                        "example": 7
+                                    },
+                                    "tipe_masalah": {
+                                        "type": "string",
+                                        "enum": [
+                                            "teknis",
+                                            "administrasi",
+                                            "anggaran",
+                                            "koordinasi",
+                                            "lingkungan",
+                                            "regulasi",
+                                            "alam",
+                                            "lainnya"
+                                        ],
+                                        "example": "teknis"
+                                    },
+                                    "judul": {
+                                        "type": "string",
+                                        "example": "Kualitas material tidak sesuai spesifikasi"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string",
+                                        "example": "Bahan yang tidak sesuai dengan perencanaan"
+                                    },
+                                    "foto_url": {
+                                        "description": "Upload foto (jpg, jpeg, png, max 5MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "return model laporan_kendala"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Listing notifikasi aktif",
+                "description": "Listing notifikasi aktif dengan pagination",
+                "operationId": "getMobileNotifikasi",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "schema": {
+                            "type": "integer",
+                            "example": 20
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Nomor halaman",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil list notifikasi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "List notifikasi"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Pekerjaan Baru"
+                                                            },
+                                                            "message": {
+                                                                "type": "string",
+                                                                "example": "Anda ditugaskan"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "pekerjaan"
+                                                            },
+                                                            "is_read": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            },
+                                                            "sent_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/arsip-list": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Listing arsip notifikasi",
+                "description": "List arsip notifikasi user dengan pagination",
+                "operationId": "getMobileArsipNotifikasi",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "schema": {
+                            "type": "integer",
+                            "example": 20
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Nomor halaman",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mengambil list arsip notifikasi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "List notifikasi"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Pekerjaan Baru"
+                                                            },
+                                                            "message": {
+                                                                "type": "string",
+                                                                "example": "Anda ditugaskan"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "pekerjaan"
+                                                            },
+                                                            "is_read": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "is_archive": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "is_delete": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "sent_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/unread-count": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Jumlah notifikasi belum dibaca",
+                "operationId": "getUnreadNotifikasi",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Jumlah notifikasi belum dibaca"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "unread": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/arsip-count": {
+            "get": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Jumlah notifikasi yang diarsipkan",
+                "operationId": "getArchiveNotifikasi",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Jumlah notifikasi dalam arsip"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "archive": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/mark-arsip/{id}": {
+            "post": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Tandai notifikasi status diarsipkan",
+                "operationId": "markNotifikasiAsArchive",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notifikasi ditandai sebagai arsip"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "is_archive": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Notifikasi tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/mark-read/{id}": {
+            "post": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Tandai notifikasi status dibaca",
+                "operationId": "markNotifikasiAsRead",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notifikasi ditandai dibaca"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "is_read": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Notifikasi tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/mark-read-all": {
+            "post": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Tandai beberapa notifikasi sebagai dibaca berdasarkan ID",
+                "operationId": "markSelectedNotifikasiAsRead",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            5,
+                                            8,
+                                            10
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notifikasi berhasil ditandai dibaca"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/mark-arsip-all": {
+            "post": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Tandai beberapa notifikasi sebagai arsip berdasarkan ID",
+                "operationId": "markSelectedNotifikasiAsArchive",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            5,
+                                            8,
+                                            10
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notifikasi berhasil ditandai diarsipkan"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/mark-delete-all": {
+            "post": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Tandai beberapa notifikasi untuk dihapus berdasarkan ID",
+                "operationId": "markSelectedNotifikasiAsDelete",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            5,
+                                            8,
+                                            10
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notifikasi berhasil dihapus"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/notifikasi/{id}": {
+            "delete": {
+                "tags": [
+                    "Notifikasi"
+                ],
+                "summary": "Hapus notifikasi",
+                "operationId": "deleteNotifikasi",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Notifikasi dihapus"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Notifikasi tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/pekerjaans": {
+            "get": {
+                "tags": [
+                    "Pekerjaan"
+                ],
+                "summary": "Listing Data Pekerjaan",
+                "description": "List pekerjaan dengan search",
+                "operationId": "mobile/pekerjaans",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Keyword pencarian pekerjaan",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "jalan"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Nomor halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return list pekerjaan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/pekerjaan/{id}": {
+            "get": {
+                "tags": [
+                    "Pekerjaan"
+                ],
+                "summary": "Data Pekerjaan",
+                "description": "-",
+                "operationId": "bobile/pekerjaan",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model pekrjaan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/pengawasans/{pekerjaan_id}": {
+            "get": {
+                "tags": [
+                    "Pengawasan"
+                ],
+                "summary": "Listing Data Pengawasan",
+                "description": "-",
+                "operationId": "bobile/pengawasans",
+                "parameters": [
+                    {
+                        "name": "pekerjaan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model pengawasan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/pengawasan/{pengawasan_id}": {
+            "get": {
+                "tags": [
+                    "Pengawasan"
+                ],
+                "summary": "Data Pengawasan",
+                "description": "-",
+                "operationId": "bobile/pengawasan",
+                "parameters": [
+                    {
+                        "name": "pengawasan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model pengawasan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/laporan/pengawasan": {
+            "post": {
+                "tags": [
+                    "PosPengawasan"
+                ],
+                "summary": "Laporan pengawasan to pos pengawasan",
+                "operationId": "3c413008046033b876f01fd0859af093",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "pos_pengawasan_id",
+                                    "kegiatan_id",
+                                    "pekerjaan_id",
+                                    "sub_pekerjaan_id",
+                                    "foto_url",
+                                    "latitude",
+                                    "longitude",
+                                    "status",
+                                    "progres_persentase"
+                                ],
+                                "properties": {
+                                    "pos_pengawasan_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "kegiatan_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "pekerjaan_id": {
+                                        "type": "integer",
+                                        "example": 7
+                                    },
+                                    "sub_pekerjaan_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "alamat": {
+                                        "type": "string",
+                                        "example": "Jl. Raya Bandung"
+                                    },
+                                    "latitude": {
+                                        "type": "number",
+                                        "example": "-6.9123"
+                                    },
+                                    "longitude": {
+                                        "type": "number",
+                                        "example": "107.6123"
+                                    },
+                                    "progres_persentase": {
+                                        "type": "number",
+                                        "example": 40
+                                    },
+                                    "kondisi_lapangan": {
+                                        "type": "string",
+                                        "example": "Banyak air"
+                                    },
+                                    "cuaca": {
+                                        "type": "string",
+                                        "example": "Cerah"
+                                    },
+                                    "foto_url": {
+                                        "description": "Upload foto (jpg, jpeg, png, max 5MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "catatan": {
+                                        "type": "string",
+                                        "example": "Perlu pengawasan tambahan"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "normal",
+                                            "deviasi",
+                                            "kritikal",
+                                            "progress"
+                                        ],
+                                        "example": "normal"
+                                    },
+                                    "device_id": {
+                                        "type": "string",
+                                        "example": "ANDROID-12345"
+                                    },
+                                    "app_version": {
+                                        "type": "string",
+                                        "example": "1.0.5"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "return model pos pengawasan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/update": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update user profile",
+                "operationId": "2406d1aa0e8b35c735e96b9c8e202bcc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Abdul"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Jl. Merdeka No. 10"
+                                    },
+                                    "photo": {
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/sub-pekerjaans/{pekerjaan_id}": {
+            "get": {
+                "tags": [
+                    "SubPekerjaan"
+                ],
+                "summary": "Listing Data Sub Pekerjaan",
+                "description": "-",
+                "operationId": "bobile/sub-pekerjaans",
+                "parameters": [
+                    {
+                        "name": "pekerjaan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model sub pekerjaan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mobile/sub-pekerjaan/{sub_pekerjaan_id}": {
+            "get": {
+                "tags": [
+                    "SubPekerjaan"
+                ],
+                "summary": "Data Sub Pekerjaan",
+                "description": "-",
+                "operationId": "bobile/sub-pekerjaan",
+                "parameters": [
+                    {
+                        "name": "sub_pekerjaan_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "return model sub pekerjaan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "User",
+            "description": "API endpoints for user"
+        },
+        {
+            "name": "Dashboard",
+            "description": "API endpoints for dashboard"
+        },
+        {
+            "name": "Dokumen",
+            "description": "API endpoints for dokumen"
+        },
+        {
+            "name": "Kegiatan",
+            "description": "API endpoints for kegiatans"
+        },
+        {
+            "name": "LaporanKendala",
+            "description": "API endpoints for pos laporan khusus atau kendala"
+        },
+        {
+            "name": "Notifikasi",
+            "description": "API endpoints for notifikasi"
+        },
+        {
+            "name": "Pekerjaan",
+            "description": "API endpoints for pekerjaan"
+        },
+        {
+            "name": "Pengawasan",
+            "description": "API endpoints for pengawasan"
+        },
+        {
+            "name": "PosPengawasan",
+            "description": "API endpoints for pos pengawasan"
+        },
+        {
+            "name": "Profile",
+            "description": "API endpoints for user profile"
+        },
+        {
+            "name": "SubPekerjaan",
+            "description": "API endpoints for sub pekerjaan"
+        },
+        {
+            "name": "App",
+            "description": "App"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Laravel Sanctum token authentication",
+                "securityScheme": "bearerAuth",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

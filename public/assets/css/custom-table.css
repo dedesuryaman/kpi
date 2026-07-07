@@ -1,0 +1,50 @@
+/* TABLE */
+.grid tr th {
+    background-color: #d8dfea;
+}
+
+.grid tr:nth-child(2n+1) {
+    background-color: #ebf0f5;
+}
+
+.grid {
+    background: #fff;
+    margin: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    border-bottom: 1px solid #3b5998;
+}
+
+.grid th {
+    font-weight: normal;
+    padding: 5px 7px;
+    border-bottom: 2px solid #3b5998;
+}
+
+.grid td {
+    padding: 3px 7px;
+}
+
+.grid tr.bbottom {
+    border-bottom: 1px solid #d8dfea;
+}
+
+.grid tr.jumlah {
+    background-color: #d8dfea;
+    border-top: 1px solid #3b5998;
+    font-weight: bold;
+}
+
+.myform td {
+    line-height: 20px;
+}
+
+.ctable {
+    background: #fff;
+    margin: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    table-layout: fixed;
+}
