@@ -7,10 +7,8 @@ use Illuminate\Support\Collection;
 class Fitness
 {
     /**
-     * Minimal weight setiap KPI
+     * Menghitung fitness kandidat bobot ABC.
      */
-    protected float $minimumWeight = 0.05;
-
     public function calculate(
         array $solution,
         Collection $scores,
@@ -19,11 +17,12 @@ class Fitness
 
         /*
         |--------------------------------------------------------------------------
-        | GROUP SCORE
+        | GROUP DATA
         |--------------------------------------------------------------------------
         */
 
         $employees = [];
+
 
         foreach ($scores as $score) {
 
@@ -33,13 +32,14 @@ class Fitness
                 continue;
             }
 
-            $employees[$score->employee_id][$masterId][] =
-                $score->score;
+            $employees[$score->employee_id][$masterId][] = $score->score;
         }
+
+
 
         /*
         |--------------------------------------------------------------------------
-        | FINAL SCORE
+        | HITUNG FINAL SCORE TIAP KARYAWAN
         |--------------------------------------------------------------------------
         */
 
@@ -51,57 +51,46 @@ class Fitness
 
             foreach ($masters as $index => $master) {
 
-                $values =
-                    $employeeScores[$master->id] ?? [];
 
-                if (empty($values)) {
+
+
+                $masterId = $master->id;
+
+                $values = $employeeScores[$masterId] ?? [];
+
+                if (count($values) == 0) {
                     continue;
                 }
 
-                $avg =
-                    array_sum($values) /
-                    count($values);
+                $avg = array_sum($values) / count($values);
 
-                $final +=
-                    $avg *
-                    $solution[$index];
+                $weight = $solution[$index];
+
+                $final += $avg * $weight;
             }
 
             $finalScores[] = $final;
         }
 
-        if (count($finalScores) < 2) {
+
+
+        if (count($finalScores) == 0) {
             return 0;
         }
 
         /*
         |--------------------------------------------------------------------------
-        | 1. STANDARD DEVIATION
+        | RATA-RATA FINAL SCORE
         |--------------------------------------------------------------------------
         */
 
-        $mean =
+        $averageFinal =
             array_sum($finalScores) /
             count($finalScores);
 
-        $variance = 0;
-
-        foreach ($finalScores as $score) {
-
-            $variance +=
-                pow(
-                    $score - $mean,
-                    2
-                );
-        }
-
-        $variance /= count($finalScores);
-
-        $stdDev = sqrt($variance);
-
         /*
         |--------------------------------------------------------------------------
-        | 2. WEIGHT BALANCE
+        | VARIANCE BOBOT
         |--------------------------------------------------------------------------
         */
 
@@ -109,40 +98,23 @@ class Fitness
             array_sum($solution) /
             count($solution);
 
-        $weightVariance = 0;
+        $variance = 0;
+
+        $penalty = 0;
 
         foreach ($solution as $weight) {
 
-            $weightVariance +=
-                pow(
-                    $weight - $weightMean,
-                    2
-                );
-        }
-
-        $weightVariance /= count($solution);
-
-        $balanceScore =
-            1 / (1 + $weightVariance);
-
-        /*
-        |--------------------------------------------------------------------------
-        | 3. KPI COVERAGE
-        |--------------------------------------------------------------------------
-        */
-
-        $coverage = 0;
-
-        foreach ($solution as $weight) {
-
-            if ($weight >= $this->minimumWeight) {
-                $coverage++;
+            if ($weight < 0.05) {
+                $penalty += 100;
             }
+
+            $variance += pow(
+                $weight - $weightMean,
+                2
+            );
         }
 
-        $coverageScore =
-            $coverage /
-            count($solution);
+        $variance /= count($solution);
 
         /*
         |--------------------------------------------------------------------------
@@ -150,18 +122,17 @@ class Fitness
         |--------------------------------------------------------------------------
         */
 
-        $fitness =
-            ($stdDev * 0.40)
-            +
-            ($balanceScore * 100 * 0.30)
-            +
-            ($coverageScore * 100 * 0.20)
-            +
-            (100 * 0.10);
+        $lambda = 5;
 
-        return round(
-            $fitness,
-            6
-        );
+        $fitness =
+            $averageFinal
+            - ($lambda * $variance)
+            - $penalty;
+
+        // $fitness =
+        //     $averageFinal -
+        //     ($lambda * $variance);
+
+        return round($fitness, 6);
     }
 }

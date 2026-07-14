@@ -143,6 +143,12 @@ Route::middleware('auth')->group(function () {
 
             Route::post('/{result}/reject', [KpiResultController::class, 'resultReject'])
                 ->name('kpi-results.reject');
+
+
+            Route::post(
+                '/{result}/generate-ai',
+                [KpiResultController::class, 'generateAI']
+            )->name('kpi-results.generate-ai');
         });
 
         Route::prefix('kpi/ranking')->group(function () {

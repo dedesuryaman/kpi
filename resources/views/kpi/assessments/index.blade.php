@@ -14,11 +14,12 @@
                 Employee performance assessment records and KPI evaluation results.
             </p>
         </div>
-
+        @if(auth()->user()->hasAnyRole(['hrd', 'supervisor']))
         <a href="{{ route('kpi.assessments.create') }}" class="btn btn-primary px-4">
             <i class="fas fa-plus me-2"></i>
             New Assessment
         </a>
+        @endif
     </div>
     {{-- Filter --}}
     <div class="card border-0 shadow-sm mb-4">
@@ -277,14 +278,14 @@
                                         <i class="fas fa-eye text-info"></i>
 
                                     </a>
-
+                                    @if(auth()->user()->hasAnyRole(['hrd', 'supervisor']))
                                     <a href="{{ route('kpi.assessments.edit',[$item->employee_id,$item->period_id]) }}"
                                         class="btn btn-sm btn-light border" title="Edit">
 
                                         <i class="fas fa-pen text-warning"></i>
 
                                     </a>
-
+                                    @endif
                                 </div>
 
                             </td>
@@ -312,13 +313,14 @@
                                     <p class="text-muted">
                                         No employee performance assessments have been recorded yet.
                                     </p>
-
+                                    @if(auth()->user()->hasAnyRole(['hrd', 'supervisor']))
                                     <a href="{{ route('kpi.assessments.create') }}" class="btn btn-primary">
 
                                         <i class="fas fa-plus me-2"></i>
                                         Create Assessment
 
                                     </a>
+                                    @endif
 
                                 </div>
 

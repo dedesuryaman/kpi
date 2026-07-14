@@ -860,8 +860,193 @@
 
             </div>
 
+
+
+
         </div>
 
     </div>
+
+    <div class="card border-0 shadow rounded-4 mt-4">
+
+        <div class="card-header bg-white py-3 border-0">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <h5 class="mb-0">
+                        <i class="bi bi-stars text-primary"></i>
+                        AI Performance Analysis
+                    </h5>
+                    <small class="text-muted">
+                        Powered by Gemini AI
+                    </small>
+                </div>
+
+                @if(!$result->aiAnalysis)
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <span class="badge bg-warning text-dark">
+                        <i class="fas fa-clock me-1"></i>
+                        No Analysis
+                    </span>
+
+
+
+                </div>
+
+                @else
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <span class="badge bg-success">
+                        <i class="fas fa-circle-check me-1"></i>
+                        Analysis Ready
+                    </span>
+
+
+
+                </div>
+
+                @endif
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            @if($result->aiAnalysis)
+
+            <!-- Summary -->
+            <div class="alert alert-primary border-0 rounded-4 mb-3">
+
+                <div class="d-flex">
+
+                    <i class="bi bi-robot fs-3 me-3"></i>
+
+                    <div>
+                        <strong>Executive Summary</strong>
+                        <div class="small mt-1">
+                            {{ $result->aiAnalysis->summary }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-lg-6">
+
+                    <div class="border rounded-4 p-3 h-100">
+
+                        <div class="fw-semibold text-success mb-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Strengths
+                        </div>
+
+                        <div class="small text-muted">
+                            {{ $result->aiAnalysis->strengths }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="border rounded-4 p-3 h-100">
+
+                        <div class="fw-semibold text-danger mb-2">
+                            <i class="bi bi-x-circle-fill"></i>
+                            Weaknesses
+                        </div>
+
+                        <div class="small text-muted">
+                            {{ $result->aiAnalysis->weaknesses }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+
+                    <div class="border rounded-4 p-3">
+
+                        <div class="fw-semibold text-warning mb-2">
+                            <i class="bi bi-lightbulb-fill"></i>
+                            Recommendation
+                        </div>
+
+                        <div class="small text-muted">
+                            {{ $result->aiAnalysis->recommendation }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="bg-success bg-opacity-10 rounded-4 p-3">
+
+                        <div class="fw-semibold text-success mb-2">
+                            <i class="bi bi-award-fill"></i>
+                            Reward
+                        </div>
+
+                        <div class="small">
+                            {{ $result->aiAnalysis->reward_recommendation }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="bg-danger bg-opacity-10 rounded-4 p-3">
+
+                        <div class="fw-semibold text-danger mb-2">
+                            <i class="bi bi-shield-exclamation"></i>
+                            Punishment
+                        </div>
+
+                        <div class="small">
+                            {{ $result->aiAnalysis->punishment_recommendation }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            @else
+
+            <div class="alert alert-warning text-center py-5">
+
+                <i class="bi bi-stars display-5 text-primary"></i>
+
+                <h6 class="mt-3">
+                    AI Performance Analysis Not Generated Yet
+                </h6>
+
+                <p class="text-muted small">
+                    The AI-based performance analysis is not available for this period.
+                    Please generate the analysis to review employee insights and recommendations.
+                </p>
+
+            </div>
+
+            @endif
+
+        </div>
+
+    </div>
+
 </div>
 @endsection

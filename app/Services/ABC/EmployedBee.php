@@ -47,8 +47,6 @@ class EmployedBee
 
                 // jangan biarkan negatif
                 $newSolution[$j] = max(0.000001, $newSolution[$j]);
-                
-                
             }
 
             // NORMALISASI
@@ -78,7 +76,51 @@ class EmployedBee
             }
         }
     }
+
     private function normalize(array $solution): array
+    {
+        $minimum = 0.05;
+
+        foreach ($solution as &$value) {
+
+            $value = max(
+                $minimum,
+                $value
+            );
+        }
+
+        unset($value);
+
+        $sum = array_sum($solution);
+
+        foreach ($solution as &$value) {
+
+            $value /= $sum;
+        }
+
+        return $solution;
+    }
+
+    private function normalize_v1(array $solution): array
+    {
+        $minWeight = 0.05; // 5%
+
+        $count = count($solution);
+
+        foreach ($solution as &$value) {
+            $value = max($minWeight, $value);
+        }
+
+        $sum = array_sum($solution);
+
+        foreach ($solution as &$value) {
+            $value /= $sum;
+        }
+
+        return $solution;
+    }
+
+    private function normalize_old(array $solution): array
     {
         $sum = array_sum($solution);
 

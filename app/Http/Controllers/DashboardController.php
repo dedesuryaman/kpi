@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\UserNotification;
+use App\Models\AbcResult;
 use App\Models\AnggaranRealisasi;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\EmployeePerformanceResult;
+use App\Models\KpiMaster;
 use App\Models\LaporanKendala;
+use App\Models\MdpAnalysisResult;
 use App\Models\SubPekerjaan;
 use App\Models\Organization;
 use App\Models\Pekerjaan;
@@ -18,6 +21,7 @@ use App\Models\SubKegiatanProgress;
 use App\Models\PekerjaanProgress;
 use App\Models\PengawasanHistories;
 use App\Models\Period;
+use App\Models\Position;
 use App\Models\RewardRecommendation;
 use App\Models\SubKegiatan;
 use Illuminate\Http\Request;
@@ -38,6 +42,11 @@ class DashboardController extends Controller
 	{
 
 		$user = auth()->user();
+
+
+		if ($user->hasRole('super-admin')) {
+			return $this->superadminDashboard();
+		}
 
 		if ($user->hasRole('hrd')) {
 			return $this->hrdDashboard();
@@ -60,6 +69,223 @@ class DashboardController extends Controller
 		}
 
 		abort(403, 'Role tidak dikenali.');
+	}
+
+	private function superadminDashboard()
+	{
+		/*
+        |--------------------------------------------------------------------------
+        | Active Period
+        |--------------------------------------------------------------------------
+        */
+
+		$activePeriod = Period::where('status', "active")->first();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Summary
+        |--------------------------------------------------------------------------
+        */
+
+		$employeeCount = Employee::count();
+
+		$departmentCount = Department::count();
+
+		$positionCount = Position::count();
+
+		$kpiMasterCount = KpiMaster::count();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Performance Result
+        |--------------------------------------------------------------------------
+        */
+
+		$performanceQuery = EmployeePerformanceResult::query();
+
+		if ($activePeriod) {
+			$performanceQuery->where('period_id', $activePeriod->id);
+		}
+
+		$averageScore = (clone $performanceQuery)->avg('final_score') ?? 0;
+
+		$highestScore = (clone $performanceQuery)->max('final_score') ?? 0;
+
+		$lowestScore = (clone $performanceQuery)->min('final_score') ?? 0;
+
+		$completedAssessment = (clone $performanceQuery)->count();
+
+		$completionRate = $employeeCount > 0
+			? round(($completedAssessment / $employeeCount) * 100, 1)
+			: 0;
+
+		/*
+        |--------------------------------------------------------------------------
+        | Reward Status
+        |--------------------------------------------------------------------------
+        */
+
+		$pendingReward = RewardRecommendation::where('status', 'Pending')->count();
+
+		$approvedReward = RewardRecommendation::where('status', 'Approved')->count();
+
+		$rejectedReward = RewardRecommendation::where('status', 'Rejected')->count();
+
+		$draftReward = RewardRecommendation::where('status', 'Draft')->count();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Grade Distribution
+        |--------------------------------------------------------------------------
+        */
+
+		$gradeDistribution = EmployeePerformanceResult::select(
+			'grade',
+			DB::raw('COUNT(*) as total')
+		)
+			->when($activePeriod, function ($query) use ($activePeriod) {
+				$query->where('period_id', $activePeriod->id);
+			})
+			->groupBy('grade')
+			->pluck('total', 'grade');
+
+		/*
+        |--------------------------------------------------------------------------
+        | Department Performance
+        |--------------------------------------------------------------------------
+        */
+
+		$departmentPerformance = EmployeePerformanceResult::select(
+			'departments.name',
+			DB::raw('AVG(employee_performance_results.final_score) as average_score')
+		)
+			->join('employees', 'employees.id', '=', 'employee_performance_results.employee_id')
+			->join('departments', 'departments.id', '=', 'employees.department_id')
+			->when($activePeriod, function ($query) use ($activePeriod) {
+				$query->where('employee_performance_results.period_id', $activePeriod->id);
+			})
+			->groupBy('departments.name')
+			->orderByDesc('average_score')
+			->get();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Monthly KPI Trend
+        |--------------------------------------------------------------------------
+        */
+
+		$monthlyTrend = EmployeePerformanceResult::select(
+			DB::raw('MONTH(created_at) as month'),
+			DB::raw('AVG(final_score) as average_score')
+		)
+			->when($activePeriod, function ($query) use ($activePeriod) {
+				$query->where('period_id', $activePeriod->id);
+			})
+			->groupBy(DB::raw('MONTH(created_at)'))
+			->orderBy(DB::raw('MONTH(created_at)'))
+			->get();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Top Performer
+        |--------------------------------------------------------------------------
+        */
+
+		$topPerformers = EmployeePerformanceResult::with([
+			'employee.department'
+		])
+			->when($activePeriod, function ($query) use ($activePeriod) {
+				$query->where('period_id', $activePeriod->id);
+			})
+			->orderByDesc('final_score')
+			->limit(10)
+			->get();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Recent Reward Activity
+        |--------------------------------------------------------------------------
+        */
+
+		$recentRewards = RewardRecommendation::with([
+			'performanceResult.employee.department'
+		])
+			->latest()
+			->take(10)
+			->get();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Latest ABC
+        |--------------------------------------------------------------------------
+        */
+
+		$latestABC = AbcResult::latest()->first();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Latest MDP
+        |--------------------------------------------------------------------------
+        */
+
+		$latestMDP = MdpAnalysisResult::latest()->first();
+
+
+		$kpiTrend = EmployeePerformanceResult::selectRaw('period_id, AVG(final_score) as score')
+			->with('period')
+			->groupBy('period_id')
+			->orderBy('period_id')
+			->get()
+			->map(function ($item) {
+				return [
+					'label' => $item->period?->name ?? 'Unknown',
+					'score' => round($item->score, 2),
+				];
+			});
+
+		/*
+        |--------------------------------------------------------------------------
+        | Return View
+        |--------------------------------------------------------------------------
+        */
+
+		return view('dashboard.super-admin', [
+
+			'activePeriod' => $activePeriod,
+
+			'employeeCount' => $employeeCount,
+			'departmentCount' => $departmentCount,
+			'positionCount' => $positionCount,
+			'kpiMasterCount' => $kpiMasterCount,
+
+			'averageScore' => round($averageScore, 2),
+			'highestScore' => round($highestScore, 2),
+			'lowestScore' => round($lowestScore, 2),
+			'completedAssessment' => $completedAssessment,
+			'completionRate' => $completionRate,
+
+			'pendingReward' => $pendingReward,
+			'approvedReward' => $approvedReward,
+			'rejectedReward' => $rejectedReward,
+			'draftReward' => $draftReward,
+
+			'gradeDistribution' => $gradeDistribution,
+
+			'departmentPerformance' => $departmentPerformance,
+
+			'monthlyTrend' => $monthlyTrend,
+
+			'topPerformers' => $topPerformers,
+
+			'recentRewards' => $recentRewards,
+
+			'latestABC' => $latestABC,
+
+			'latestMDP' => $latestMDP,
+
+			'kpiTrend' => $kpiTrend,
+
+		]);
 	}
 
 	private function hrdDashboard()
@@ -196,8 +422,190 @@ class DashboardController extends Controller
 
 	private function directorDashboard()
 	{
-		// Query dashboard Director
-		return view('dashboard.director');
+		/*
+        |--------------------------------------------------------------------------
+        | Executive Cards
+        |--------------------------------------------------------------------------
+        */
+
+		$companyScore = round(
+			EmployeePerformanceResult::avg('final_score') ?? 0,
+			2
+		);
+
+		$employeeCount = Employee::count();
+
+
+		$latestRewards = RewardRecommendation::whereIn('id', function ($query) {
+			$query->select(DB::raw('MAX(id)'))
+				->from('reward_recommendations')
+				->groupBy('performance_result_id');
+		});
+
+
+		$rewardApprovedCount = (clone $latestRewards)
+			->where('status', 'Approved')
+			->count();
+
+		$rewardRejectedCount = (clone $latestRewards)
+			->where('status', 'Rejected')
+			->count();
+
+		$rewardPendingCount = (clone $latestRewards)
+			->where('status', 'Pending')
+			->count();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Monthly Performance Trend
+        |--------------------------------------------------------------------------
+        */
+
+		$monthly = EmployeePerformanceResult::select(
+			DB::raw('MONTH(created_at) as month'),
+			DB::raw('AVG(final_score) as score')
+		)
+			->groupBy('month')
+			->orderBy('month')
+			->get();
+
+		$months = [];
+		$scores = [];
+
+		foreach ($monthly as $item) {
+
+			$months[] = date('M', mktime(0, 0, 0, $item->month, 1));
+
+			$scores[] = round($item->score, 2);
+		}
+
+		/*
+        |--------------------------------------------------------------------------
+        | Department Ranking
+        |--------------------------------------------------------------------------
+        */
+
+		$departmentRanking = Department::leftJoin(
+			'employees',
+			'departments.id',
+			'=',
+			'employees.department_id'
+		)
+			->leftJoin(
+				'employee_performance_results',
+				'employees.id',
+				'=',
+				'employee_performance_results.employee_id'
+			)
+			->select(
+				'departments.name',
+				DB::raw('AVG(employee_performance_results.final_score) as score')
+			)
+			->groupBy('departments.id', 'departments.name')
+			->orderByDesc('score')
+			->get();
+
+		$departmentLabels = $departmentRanking->pluck('name');
+
+		$departmentScores = $departmentRanking
+			->pluck('score')
+			->map(fn($v) => round($v, 2));
+
+		/*
+        |--------------------------------------------------------------------------
+        | Employee Distribution
+        |--------------------------------------------------------------------------
+        */
+
+		$excellent = EmployeePerformanceResult::where('final_score', '>=', 90)->count();
+
+		$good = EmployeePerformanceResult::whereBetween(
+			'final_score',
+			[75, 89.99]
+		)->count();
+
+		$average = EmployeePerformanceResult::whereBetween(
+			'final_score',
+			[60, 74.99]
+		)->count();
+
+		$poor = EmployeePerformanceResult::where(
+			'final_score',
+			'<',
+			60
+		)->count();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Top Employee
+        |--------------------------------------------------------------------------
+        */
+
+		$topEmployees = EmployeePerformanceResult::with([
+			'employee.department'
+		])
+			->orderByDesc('final_score')
+			->limit(10)
+			->get();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Need Improvement
+        |--------------------------------------------------------------------------
+        */
+
+		$needImprovement = EmployeePerformanceResult::with([
+			'employee.department'
+		])
+			->orderBy('final_score')
+			->limit(10)
+			->get();
+
+		/*
+        |--------------------------------------------------------------------------
+        | Reward Recommendation
+        |--------------------------------------------------------------------------
+        */
+
+		$rewardRecommendations = RewardRecommendation::with([
+			'employee.department'
+		])
+			->latest()
+			->limit(10)
+			->get();
+
+		return view('dashboard.director', compact(
+
+			'companyScore',
+
+			'employeeCount',
+
+			'rewardApprovedCount',
+
+			'rewardRejectedCount',
+
+			'months',
+
+			'scores',
+
+			'departmentLabels',
+
+			'departmentScores',
+
+			'excellent',
+
+			'good',
+
+			'average',
+
+			'poor',
+
+			'topEmployees',
+
+			'needImprovement',
+
+			'rewardRecommendations'
+		));
 	}
 
 	private function managerDashboard()

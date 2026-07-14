@@ -65,7 +65,7 @@
 
         <div class="col-lg-8">
 
-            <div class="card border-0 shadow-sm rounded-4">
+            <div class="card border-0 shadow-sm rounded-4 mb-3">
 
                 <div class="card-body">
 
@@ -80,19 +80,18 @@
                         <div class="ms-3">
 
                             <h4 class="mb-1">
-
                                 {{ $result->employee->name }}
-
                             </h4>
 
+                            <div class="text-muted small">
+                                <i class="bi bi-person-badge"></i>
+                                {{ $result->employee->employee_code }}
+                            </div>
+
                             <div class="text-muted">
-
-                                {{ $result->employee->department->name }}
-
-                                •
-
-                                {{ $result->employee->position->name }}
-
+                                {{ $result->employee->department->name ?? 'No Department' }}
+                                <span class="mx-2">•</span>
+                                {{ $result->employee->position->name ?? 'No Position' }}
                             </div>
 
                         </div>
@@ -119,88 +118,263 @@
 
             </div>
 
-            <div class="card">
+            <div class="card border-0 shadow-sm rounded-4">
 
-                <div class="card-header">
+                <div class="card-header bg-white border-0 py-3">
 
-                    Employee KPI
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h5 class="mb-0">
+                                <i class="bi bi-bar-chart-line-fill text-primary me-2"></i>
+                                Employee KPI
+                            </h5>
+                            <small class="text-muted">
+                                Performance by KPI Category
+                            </small>
+                        </div>
+
+                        <span class="badge bg-primary rounded-pill">
+                            {{ $result->details->count() }} KPI
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="card-body pt-2">
+
+                    @foreach($result->details as $detail)
+
+                    <div class="mb-3">
+
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                            <span class="fw-semibold">
+                                {{ $detail->kpiMaster->name }}
+                            </span>
+
+                            <span class="badge bg-light text-dark border">
+                                {{ number_format($detail->score,1) }}
+                            </span>
+
+                        </div>
+
+                        <div class="progress rounded-pill" style="height:8px;">
+
+                            <div class="progress-bar
+                                @if($detail->score >= 85)
+                                    bg-success
+                                @elseif($detail->score >= 70)
+                                    bg-primary
+                                @elseif($detail->score >= 50)
+                                    bg-warning
+                                @else
+                                    bg-danger
+                                @endif" style="width: {{ min($detail->score,100) }}%">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    @endforeach
+
+                </div>
+
+            </div>
+
+
+            <div class="card border-0 shadow rounded-4 mt-3 mb-3">
+
+                <div class="card-header bg-white py-3 border-0">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h5 class="mb-0">
+                                <i class="bi bi-stars text-primary"></i>
+                                AI Performance Analysis
+                            </h5>
+                            <small class="text-muted">
+                                Powered by Gemini AI
+                            </small>
+                        </div>
+
+                        @if(!$result->aiAnalysis)
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-clock me-1"></i>
+                                No Analysis
+                            </span>
+
+                            <button class="btn btn-primary" id="btnGenerateAI" data-id="{{ $result->id }}">
+
+                                <i class="fas fa-brain me-2"></i>
+                                Generate AI Analysis
+
+                            </button>
+
+                        </div>
+
+                        @else
+
+                        <div class="d-flex align-items-center gap-2">
+
+                            <span class="badge bg-success">
+                                <i class="fas fa-circle-check me-1"></i>
+                                Analysis Ready
+                            </span>
+
+                            <button class="btn btn-outline-primary" id="btnGenerateAI" data-id="{{ $result->id }}">
+
+                                <i class="fas fa-rotate-right me-2"></i>
+                                Regenerate AI Analysis
+
+                            </button>
+
+                        </div>
+
+                        @endif
+                    </div>
 
                 </div>
 
                 <div class="card-body">
 
+                    @if($result->aiAnalysis)
 
+                    <!-- Summary -->
+                    <div class="alert alert-primary border-0 rounded-4 mb-3">
 
-                    <table class="table align-middle">
+                        <div class="d-flex">
 
-                        <thead class="table-light">
+                            <i class="bi bi-robot fs-3 me-3"></i>
 
-                            <tr>
+                            <div>
+                                <strong>Executive Summary</strong>
+                                <div class="small mt-1">
+                                    {{ $result->aiAnalysis->summary }}
+                                </div>
+                            </div>
 
-                                <th>KPI</th>
+                        </div>
 
-                                <th width="120">
+                    </div>
 
-                                    Score
+                    <div class="row g-3">
 
-                                </th>
+                        <div class="col-lg-6">
 
-                                <th width="120">
+                            <div class="border rounded-4 p-3 h-100">
 
-                                    Performance
+                                <div class="fw-semibold text-success mb-2">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Strengths
+                                </div>
 
-                                </th>
+                                <div class="small text-muted">
+                                    {{ $result->aiAnalysis->strengths }}
+                                </div>
 
-                            </tr>
+                            </div>
 
-                        </thead>
+                        </div>
 
-                        <tbody>
+                        <div class="col-lg-6">
 
-                            @foreach($result->details as $detail)
+                            <div class="border rounded-4 p-3 h-100">
 
-                            <tr>
+                                <div class="fw-semibold text-danger mb-2">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    Weaknesses
+                                </div>
 
-                                <td>
+                                <div class="small text-muted">
+                                    {{ $result->aiAnalysis->weaknesses }}
+                                </div>
 
-                                    {{ $detail->kpiMaster->name }}
+                            </div>
 
-                                </td>
+                        </div>
 
-                                <td>
+                        <div class="col-12">
 
-                                    <strong>
+                            <div class="border rounded-4 p-3">
 
-                                        {{ number_format($detail->score,1) }}
+                                <div class="fw-semibold text-warning mb-2">
+                                    <i class="bi bi-lightbulb-fill"></i>
+                                    Recommendation
+                                </div>
 
-                                    </strong>
+                                <div class="small text-muted">
+                                    {{ $result->aiAnalysis->recommendation }}
+                                </div>
 
-                                </td>
+                            </div>
 
-                                <td>
+                        </div>
 
-                                    <div class="progress" style="height:7px">
+                        <div class="col-lg-6">
 
-                                        <div class="progress-bar" style="width:{{ $detail->score }}%">
+                            <div class="bg-success bg-opacity-10 rounded-4 p-3">
 
-                                        </div>
+                                <div class="fw-semibold text-success mb-2">
+                                    <i class="bi bi-award-fill"></i>
+                                    Reward
+                                </div>
 
-                                    </div>
+                                <div class="small">
+                                    {{ $result->aiAnalysis->reward_recommendation }}
+                                </div>
 
-                                </td>
+                            </div>
 
-                            </tr>
+                        </div>
 
-                            @endforeach
+                        <div class="col-lg-6">
 
-                        </tbody>
+                            <div class="bg-danger bg-opacity-10 rounded-4 p-3">
 
-                    </table>
+                                <div class="fw-semibold text-danger mb-2">
+                                    <i class="bi bi-shield-exclamation"></i>
+                                    Punishment
+                                </div>
 
+                                <div class="small">
+                                    {{ $result->aiAnalysis->punishment_recommendation }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    @else
+
+                    <div class="text-center py-5">
+
+                        <i class="bi bi-stars display-5 text-primary"></i>
+
+                        <h6 class="mt-3">
+                            AI Analysis Not Available
+                        </h6>
+
+                        <p class="text-muted small">
+                            Click Generate to create an AI performance analysis.
+                        </p>
+
+                    </div>
+
+                    @endif
 
                 </div>
 
             </div>
+
 
         </div>
 
@@ -345,6 +519,74 @@
     form.submit();
 
 }
+
+$('#btnGenerateAI').click(function () {
+
+    let id = $(this).data('id');
+
+    Swal.fire({
+        title: 'Generate AI Analysis?',
+        text: 'Gemini akan menganalisis hasil KPI ini.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Generate',
+        cancelButtonText: 'Batal'
+    }).then((result)=>{
+
+        if(!result.isConfirmed)
+            return;
+
+        Swal.fire({
+            title:'Generating...',
+            html:'<br>Gemini sedang menganalisis KPI.<br><br>Mohon tunggu...',
+            allowOutsideClick:false,
+            allowEscapeKey:false,
+            didOpen:()=>{
+                Swal.showLoading();
+            }
+        });
+
+        $.ajax({
+
+            url:'/kpi/result/'+id+'/generate-ai',
+
+            type:'POST',
+
+            headers:{
+                'X-CSRF-TOKEN':'{{ csrf_token() }}'
+            },
+
+            success:function(res){
+
+                Swal.fire({
+                    icon:'success',
+                    title:'Berhasil',
+                    text:'AI Analysis berhasil dibuat.',
+                    timer:1500,
+                    showConfirmButton:false
+                });
+
+                setTimeout(function(){
+                    location.reload();
+                },1500);
+
+            },
+
+            error:function(xhr){
+
+                Swal.fire({
+                    icon:'error',
+                    title:'Gagal',
+                    text:xhr.responseJSON?.message ?? 'Terjadi kesalahan.'
+                });
+
+            }
+
+        });
+
+    });
+
+});
 
 </script>
 

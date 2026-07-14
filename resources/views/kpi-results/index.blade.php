@@ -222,10 +222,11 @@
                     <th>Period</th>
 
                     <th>Score</th>
-
-                    <th>Status</th>
-
                     <th></th>
+                    @if(auth()->user()->hasAnyRole(['hrd', 'manager']))
+                    <th class="text-center">Action</th>
+
+                    @endif
 
                 </tr>
 
@@ -309,7 +310,7 @@
 
                     </td>
 
-                    <td>
+                    <td class="text-center">
 
                         @switch($result->approval_status)
 
@@ -351,8 +352,8 @@
 
                     </td>
 
-
-                    <td class="text-end">
+                    @if(auth()->user()->hasAnyRole(['hrd', 'manager']))
+                    <td class="text-center">
 
                         <a href="{{ route('kpi-results.show',$result) }}" class="btn btn-primary btn-sm rounded-pill">
 
@@ -363,6 +364,7 @@
                         </a>
 
                     </td>
+                    @endif
 
                 </tr>
 

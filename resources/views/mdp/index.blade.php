@@ -62,6 +62,7 @@
     @endif
 
     {{-- Run Analysis --}}
+    @if (auth()->user()->hasRole('hrd'))
     <div class="card shadow-sm border-0">
 
         <div class="card-header bg-primary text-white">
@@ -77,7 +78,6 @@
         </div>
 
         <div class="card-body">
-
             <form method="POST" action="{{ route('mdp.run') }}">
 
                 @csrf
@@ -133,7 +133,7 @@
         </div>
 
     </div>
-
+    @endif
     {{-- History --}}
     <div class="card shadow-sm border-0 mt-4">
 
@@ -189,7 +189,7 @@
 
                             </th>
 
-                            <th width="180">
+                            <th width="180" class="text-center">
 
                                 Action
 
@@ -211,10 +211,11 @@
                                 <span class="badge bg-success">{{ number_format($item->average_reward, 2) }}</span>
                             </td>
                             <td class="text-center">{{ $item->created_at?->format('d M Y H:i') }}</td>
-                            <td>
+                            <td class="text-center">
                                 <a href="{{ route('mdp.show',$item->period_id) }}" class="btn btn-sm btn-primary">
                                     <i class="fas fa-eye"></i> Detail
                                 </a>
+                                @if (auth()->user()->hasRole('hrd'))
                                 <form action="{{ route('mdp.destroy', $item->period_id) }}" method="POST"
                                     class="d-inline">
                                     @csrf
@@ -224,6 +225,7 @@
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

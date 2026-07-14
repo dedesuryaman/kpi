@@ -97,7 +97,8 @@ class RewardPunishmentController extends Controller
 
         $query = EmployeePerformanceResult::with([
             'employee.department',
-            'latestRewardRecommendation'
+            'latestRewardRecommendation',
+
         ])
             ->where('period_id', $periodId)
             ->where('final_score', '>=', 80);
@@ -397,6 +398,7 @@ class RewardPunishmentController extends Controller
             'details.kpiMaster',
             //'rewardRecommendation.approver',
             'latestRewardRecommendation.approver',
+            'aiAnalysis'
         ]);
 
         /*

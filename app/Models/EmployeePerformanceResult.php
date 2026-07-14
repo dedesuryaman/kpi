@@ -61,6 +61,17 @@ class EmployeePerformanceResult extends Model
     }
 
 
+    public function aiAnalysis()
+    {
+        return $this->hasOne(EmployeePerformanceAiAnalysis::class, 'performance_result_id');
+    }
+
+    public function latestAiAnalysis()
+    {
+        return $this->hasOne(EmployeePerformanceAiAnalysis::class, 'performance_result_id')
+            ->latestOfMany();
+    }
+
     // public function rewardRecommendation()
     // {
     //     return $this->hasOne(

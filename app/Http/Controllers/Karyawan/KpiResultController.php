@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\EmployeePerformanceResult;
 use App\Models\KpiScore;
 use App\Models\Period;
+use App\Services\AI\GeminiAnalysisService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -92,6 +93,16 @@ class KpiResultController extends Controller
 
     public function resultIndex(Request $request)
     {
+
+
+        abort_unless(
+            auth()->user()->hasAnyRole(['super-admin', 'hrd']),
+            403,
+            'Unauthorized.'
+        );
+
+
+
         $search       = trim($request->search);
         $departmentId = $request->department_id;
         $periodId     = $request->period_id;
@@ -157,17 +168,68 @@ class KpiResultController extends Controller
     public function resultShow(EmployeePerformanceResult $result)
     {
 
+        abort_unless(
+            auth()->user()->hasAnyRole(['hrd']),
+            403,
+            'Unauthorized.'
+        );
+
+
+
         $result->load([
             'employee.department',
             'employee.position',
-            'details.kpiMaster'
+            'details.kpiMaster',
+            'aiAnalysis',
+
         ]);
 
         return view('kpi-results.show', compact('result'));
     }
 
+
+
+    public function generateAI(
+        EmployeePerformanceResult $result,
+        GeminiAnalysisService $gemini
+    ) {
+        try {
+            $analysis = $gemini->analyze($result);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'AI Analysis berhasil dibuat.',
+                'data' => $analysis
+            ]);
+        } catch (\Exception $e) {
+
+            $message = 'AI service is currently unavailable.';
+
+            if (str_contains($e->getMessage(), '429')) {
+                $message = 'Gemini AI quota has been exceeded. Please try again later.';
+            } elseif (str_contains($e->getMessage(), '401')) {
+                $message = 'Invalid Gemini API Key.';
+            } elseif (str_contains($e->getMessage(), '403')) {
+                $message = 'Access to Gemini API was denied.';
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => $message,
+            ], 400);
+        }
+    }
+
+
     public function resultApprove(Request $request, EmployeePerformanceResult $result)
     {
+        abort_unless(
+            auth()->user()->hasAnyRole(['manager', 'hrd']),
+            403,
+            'Unauthorized.'
+        );
+
+
         $result->update([
 
             'approval_status' => 'Approved',
@@ -182,6 +244,14 @@ class KpiResultController extends Controller
 
     public function resultReject(Request $request, EmployeePerformanceResult $result)
     {
+
+        abort_unless(
+            auth()->user()->hasAnyRole(['manager', 'hrd']),
+            403,
+            'Unauthorized.'
+        );
+
+
         request()->validate([
             'approval_notes' => 'required'
         ]);
