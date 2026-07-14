@@ -396,7 +396,6 @@ class RewardPunishmentController extends Controller
             'employee.position',
             'period',
             'details.kpiMaster',
-            //'rewardRecommendation.approver',
             'latestRewardRecommendation.approver',
             'aiAnalysis'
         ]);
