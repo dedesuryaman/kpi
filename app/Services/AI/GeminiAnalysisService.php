@@ -246,6 +246,7 @@ class GeminiAnalysisService
         $position = $employee->position->name ?? 'N/A';
         $employeeCode = $employee->employee_code ?? 'N/A';
 
+        /*
         return <<<PROMPT
 
 Anda adalah seorang Konsultan HR Senior, Pakar KPI, Pakar Artificial Bee Colony (ABC), dan Pakar Markov Decision Process (MDP).
@@ -344,6 +345,29 @@ PENTING
 
 Kembalikan HANYA JSON yang valid.
 
+Kembalikan JSON.
+
+Setiap field maksimal:
+
+summary : 40 kata
+
+strengths : 30 kata
+
+weaknesses : 30 kata
+
+opportunities : 30 kata
+
+risks : 30 kata
+
+recommendation : 40 kata
+
+reward_recommendation : 20 kata
+
+punishment_recommendation : 20 kata
+
+Jangan melebihi batas tersebut.
+
+
 Jangan berikan penjelasan apa pun.
 
 Jangan gunakan markdown.
@@ -351,6 +375,56 @@ Jangan gunakan markdown.
 Jangan gunakan ```json.
 
 Kembalikan tepat dengan format berikut.
+
+{
+    "summary":"",
+    "strengths":"",
+    "weaknesses":"",
+    "opportunities":"",
+    "risks":"",
+    "recommendation":"",
+    "reward_recommendation":"",
+    "punishment_recommendation":"",
+    "overall_score":95,
+    "confidence":98
+}
+
+PROMPT;
+*/
+        return <<<PROMPT
+
+Anda adalah AI HR Consultant.
+
+Analisis performa karyawan berdasarkan:
+
+- KPI
+- ABC Optimization
+- MDP Decision
+
+Gunakan hanya data yang diberikan.
+
+Berikan analisis singkat, objektif, profesional.
+
+Output HARUS JSON valid.
+
+Jangan gunakan markdown.
+
+Jangan gunakan ```.
+
+Jangan tambahkan penjelasan.
+
+Setiap field maksimal:
+
+summary 30 kata
+strengths 20 kata
+weaknesses 20 kata
+opportunities 20 kata
+risks 20 kata
+recommendation 30 kata
+reward_recommendation 15 kata
+punishment_recommendation 15 kata
+
+Format:
 
 {
     "summary":"",
@@ -394,7 +468,7 @@ PROMPT;
                     'temperature' => 0.3,
                     'topK' => 40,
                     'topP' => 0.9,
-                    'maxOutputTokens' => 2048,
+                    'maxOutputTokens' => 4096,
                     'responseMimeType' => 'application/json'
                 ]
             ]);
@@ -441,6 +515,117 @@ PROMPT;
      */
     protected function parseResponse(array $response): array
     {
+        Log::debug('Gemini Finish', [
+            'finishReason' => data_get(
+                $response,
+                'candidates.0.finishReason'
+            ),
+
+            'tokenCount' => data_get(
+                $response,
+                'usageMetadata.candidatesTokenCount'
+            ),
+
+            'promptTokenCount' => data_get(
+                $response,
+                'usageMetadata.promptTokenCount'
+            ),
+
+            'totalTokenCount' => data_get(
+                $response,
+                'usageMetadata.totalTokenCount'
+            ),
+        ]);
+
+
+        $text = data_get(
+            $response,
+            'candidates.0.content.parts.0.text',
+            ''
+        );
+
+        if (blank($text)) {
+            throw new \Exception('Empty Gemini response.');
+        }
+
+        Log::debug('Gemini Raw Response', [
+            'text' => $text,
+        ]);
+
+        // Hilangkan markdown
+        $text = trim($text);
+        $text = preg_replace('/^```json\s*/i', '', $text);
+        $text = preg_replace('/^```\s*/i', '', $text);
+        $text = preg_replace('/\s*```$/', '', $text);
+
+        /*
+    |--------------------------------------------------------------------------
+    | Ambil JSON pertama yang valid
+    |--------------------------------------------------------------------------
+    */
+        $start = strpos($text, '{');
+
+        if ($start === false) {
+            throw new \Exception('Gemini response does not contain JSON.');
+        }
+
+        $level = 0;
+        $end = null;
+        $length = strlen($text);
+
+        for ($i = $start; $i < $length; $i++) {
+
+            if ($text[$i] === '{') {
+                $level++;
+            }
+
+            if ($text[$i] === '}') {
+                $level--;
+
+                if ($level === 0) {
+                    $end = $i;
+                    break;
+                }
+            }
+        }
+
+        if ($end === null) {
+            throw new \Exception('Cannot detect end of JSON.');
+        }
+
+        $jsonText = substr(
+            $text,
+            $start,
+            $end - $start + 1
+        );
+
+        Log::debug('Gemini Clean JSON', [
+            'json' => $jsonText,
+        ]);
+
+        try {
+
+            return json_decode(
+                $jsonText,
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
+        } catch (\JsonException $e) {
+
+            Log::error('Gemini JSON Error', [
+                'message' => $e->getMessage(),
+                'json' => $jsonText,
+            ]);
+
+            throw new \Exception(
+                'Invalid JSON : ' . $e->getMessage()
+            );
+        }
+    }
+
+    protected function parseResponsex(array $response): array
+    {
 
         $text =
             $response['candidates'][0]['content']['parts'][0]['text']
@@ -462,16 +647,71 @@ PROMPT;
             trim($text)
         );
 
-        $json = json_decode($text, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+
+        Log::debug('Gemini Raw Text', [
+            'text' => $text,
+        ]);
+
+        $text = trim($text);
+
+        // hilangkan markdown
+        $text = preg_replace('/```json|```/i', '', $text);
+
+        // ambil hanya objek JSON
+        $start = strpos($text, '{');
+        $end   = strrpos($text, '}');
+
+        if ($start !== false && $end !== false) {
+            $text = substr($text, $start, $end - $start + 1);
+        }
+
+        //$json = json_decode($text, true);
+
+        //$text = trim($text);
+
+
+        // hapus markdown
+        $text = preg_replace(
+            '/```json|```/',
+            '',
+            $text
+        );
+
+
+        // hapus karakter kontrol
+        $text = preg_replace(
+            '/[\x00-\x1F\x80-\x9F]/u',
+            '',
+            $text
+        );
+
+
+        $json = json_decode(
+            $text,
+            true
+        );
+
+
+        if (json_last_error()) {
 
             throw new Exception(
-                'Invalid JSON : ' . json_last_error_msg()
+                'Invalid JSON : ' .
+                    json_last_error_msg()
             );
         }
 
+
         return $json;
+
+        // if (json_last_error() !== JSON_ERROR_NONE) {
+
+        //     throw new Exception(
+        //         'Invalid JSON : ' . json_last_error_msg()
+        //     );
+        // }
+
+        // return $json;
     }
 
     /**
