@@ -38,6 +38,12 @@ class KpiIndicator extends Model
         return $this->belongsTo(KpiMaster::class, 'kpi_master_id');
     }
 
+
+    public function kpiMaster()
+    {
+        return $this->belongsTo(KpiMaster::class, 'kpi_master_id');
+    }
+
     /**
      * Target KPI per karyawan
      */

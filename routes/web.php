@@ -24,6 +24,16 @@ use App\Http\Controllers\Karyawan\PerformanceHistoryController;
 use App\Http\Controllers\MdpController;
 use App\Http\Controllers\Report\EmployeePerformanceReportController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Reports\AbcReportController;
+use App\Http\Controllers\Reports\AiReportController;
+use App\Http\Controllers\Reports\AssessmentReportController;
+use App\Http\Controllers\Reports\ExecutiveReportController;
+use App\Http\Controllers\Reports\MainReportController;
+use App\Http\Controllers\Reports\MasterReportController;
+use App\Http\Controllers\Reports\MdpReportController;
+use App\Http\Controllers\Reports\PerformanceReportController;
+use App\Http\Controllers\Reports\RewardReportController;
+use App\Http\Controllers\Reports\StatisticsReportController;
 use App\Http\Controllers\RewardPunishmentController;
 
 use App\Models\KpiScore;
@@ -197,6 +207,147 @@ Route::middleware('auth')->group(function () {
                 [EmployeePerformanceReportController::class, 'excel']
             )->name('reports.employee-performance.excel');
         });
+        ///baru
+
+        /*
+        |--------------------------------------------------------------------------
+        | Reports & Export
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('reports')
+            ->name('reports.')
+            ->middleware(['auth'])
+            ->group(function () {
+
+                /*
+        |--------------------------------------------------------------------------
+        | Dashboard Report Center
+        |--------------------------------------------------------------------------
+        */
+                Route::get('/', [MainReportController::class, 'index'])
+                    ->name('index');
+
+                /*
+        |--------------------------------------------------------------------------
+        | Master Data
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('master')->name('master.')->group(function () {
+                    Route::get('/employees', [MasterReportController::class, 'employees'])->name('employees');
+                    Route::get('/departments', [MasterReportController::class, 'departments'])->name('departments');
+                    Route::get('/divisions', [MasterReportController::class, 'divisions'])->name('divisions');
+                    Route::get('/positions', [MasterReportController::class, 'positions'])->name('positions');
+                    Route::get('/kpi-master', [MasterReportController::class, 'kpiMaster'])->name('kpi-master');
+                    Route::get('/kpi-indicators', [MasterReportController::class, 'kpiIndicators'])->name('kpi-indicators');
+                    Route::get('/kpi-targets', [MasterReportController::class, 'kpiTargets'])->name('kpi-targets');
+                    Route::get('/periods', [MasterReportController::class, 'periods'])->name('periods');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | KPI Assessment
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('assessment')->name('assessment.')->group(function () {
+                    Route::get('/summary', [AssessmentReportController::class, 'summary'])->name('summary');
+                    Route::get('/employee-scores', [AssessmentReportController::class, 'employeeScores'])->name('employee-scores');
+                    Route::get('/department-scores', [AssessmentReportController::class, 'departmentScores'])->name('department-scores');
+                    Route::get('/completion', [AssessmentReportController::class, 'completion'])->name('completion');
+                    Route::get('/monthly', [AssessmentReportController::class, 'monthly'])->name('monthly');
+                    Route::get('/annual', [AssessmentReportController::class, 'annual'])->name('annual');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | Employee Performance
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('performance')->name('performance.')->group(function () {
+                    Route::get('/summary', [PerformanceReportController::class, 'summary'])->name('summary');
+                    Route::get('/detail', [PerformanceReportController::class, 'detail'])->name('detail');
+                    Route::get('/ranking', [PerformanceReportController::class, 'ranking'])->name('ranking');
+                    Route::get('/top', [PerformanceReportController::class, 'top'])->name('top');
+                    Route::get('/lowest', [PerformanceReportController::class, 'lowest'])->name('lowest');
+                    Route::get('/department', [PerformanceReportController::class, 'department'])->name('department');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | ABC Optimization
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('abc')->name('abc.')->group(function () {
+                    Route::get('/summary', [AbcReportController::class, 'summary'])->name('summary');
+                    Route::get('/fitness', [AbcReportController::class, 'fitness'])->name('fitness');
+                    Route::get('/iterations', [AbcReportController::class, 'iterations'])->name('iterations');
+                    Route::get('/best-solution', [AbcReportController::class, 'bestSolution'])->name('best-solution');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | MDP Analysis
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('mdp')->name('mdp.')->group(function () {
+                    Route::get('/summary', [MdpReportController::class, 'summary'])->name('summary');
+                    Route::get('/states', [MdpReportController::class, 'states'])->name('states');
+                    Route::get('/actions', [MdpReportController::class, 'actions'])->name('actions');
+                    Route::get('/rewards', [MdpReportController::class, 'rewards'])->name('rewards');
+                    Route::get('/transitions', [MdpReportController::class, 'transitions'])->name('transitions');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | AI Analysis
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('ai')->name('ai.')->group(function () {
+                    Route::get('/summary', [AiReportController::class, 'summary'])->name('summary');
+                    Route::get('/individual', [AiReportController::class, 'individual'])->name('individual');
+                    Route::get('/department', [AiReportController::class, 'department'])->name('department');
+                    Route::get('/recommendations', [AiReportController::class, 'recommendations'])->name('recommendations');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | Reward & Punishment
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('reward')->name('reward.')->group(function () {
+                    Route::get('/reward', [RewardReportController::class, 'reward'])->name('reward');
+                    Route::get('/punishment', [RewardReportController::class, 'punishment'])->name('punishment');
+                    Route::get('/approval', [RewardReportController::class, 'approval'])->name('approval');
+                    Route::get('/statistics', [RewardReportController::class, 'statistics'])->name('statistics');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | Statistics
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('statistics')->name('statistics.')->group(function () {
+                    Route::get('/attendance', [StatisticsReportController::class, 'attendance'])->name('attendance');
+                    Route::get('/productivity', [StatisticsReportController::class, 'productivity'])->name('productivity');
+                    Route::get('/quality', [StatisticsReportController::class, 'quality'])->name('quality');
+                    Route::get('/discipline', [StatisticsReportController::class, 'discipline'])->name('discipline');
+                    Route::get('/innovation', [StatisticsReportController::class, 'innovation'])->name('innovation');
+                    Route::get('/department-comparison', [StatisticsReportController::class, 'departmentComparison'])->name('department-comparison');
+                    Route::get('/period-comparison', [StatisticsReportController::class, 'periodComparison'])->name('period-comparison');
+                });
+
+                /*
+        |--------------------------------------------------------------------------
+        | Executive Reports
+        |--------------------------------------------------------------------------
+        */
+                Route::prefix('executive')->name('executive.')->group(function () {
+                    Route::get('/dashboard', [ExecutiveReportController::class, 'dashboard'])->name('dashboard');
+                    Route::get('/company-kpi', [ExecutiveReportController::class, 'companyKpi'])->name('company-kpi');
+                    Route::get('/performance-summary', [ExecutiveReportController::class, 'performanceSummary'])->name('performance-summary');
+                    Route::get('/strategic-kpi', [ExecutiveReportController::class, 'strategicKpi'])->name('strategic-kpi');
+                });
+            });
 
 
 
