@@ -87,10 +87,10 @@
                     ABC Optimization
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="#" class="list-group-item">Optimization Summary</a>
-                    <a href="#" class="list-group-item">Fitness Result</a>
-                    <a href="#" class="list-group-item">Iteration History</a>
-                    <a href="#" class="list-group-item">Best Solution</a>
+                    <a href="{{ route('reports.abc.summary') }}" class="list-group-item">Optimization Summary</a>
+                    <a href="{{ route('reports.abc.fitness') }}" class="list-group-item">Fitness Result</a>
+                    <a href="{{ route('reports.abc.iterations') }}" class="list-group-item">Iteration History</a>
+                    <a href="{{ route('reports.abc.best-solution') }}" class="list-group-item">Best Solution</a>
                 </div>
             </div>
         </div>
@@ -103,10 +103,10 @@
                     MDP Analysis
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="#" class="list-group-item">Decision Summary</a>
-                    <a href="#" class="list-group-item">State Analysis</a>
-                    <a href="#" class="list-group-item">Reward Analysis</a>
-                    <a href="#" class="list-group-item">Transition Probability</a>
+                    <a href="{{ route('reports.mdp.summary') }}" class="list-group-item">Decision Summary</a>
+                    <a href="{{ route('reports.mdp.states') }}" class="list-group-item">State Analysis</a>
+                    <a href="{{ route('reports.mdp.actions') }}" class="list-group-item">Reward Analysis</a>
+                    <a href="{{ route('reports.mdp.rewards') }}" class="list-group-item">Transition Probability</a>
                 </div>
             </div>
         </div>

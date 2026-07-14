@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MdpAnalysisResult;
 use App\Models\Department;
+use App\Models\MdpAction;
+use App\Models\MdpState;
+use App\Models\MdpTransitionProbability;
 use App\Models\Period;
 
 class MdpReportController extends Controller
@@ -13,11 +16,66 @@ class MdpReportController extends Controller
     /**
      * MDP Decision Summary
      */
+
     public function summary(Request $request)
     {
-        $data = $this->getData($request);
+        $periodId = $request->period_id
+            ?? Period::where('status', 'active')->value('id');
 
-        return view('reports.mdp.summary', $data);
+
+        $states = MdpState::where('period_id', $periodId)
+            ->count();
+
+
+        $actions = MdpAction::where('period_id', $periodId)
+            ->count();
+
+
+        $transitions = MdpTransitionProbability::whereHas(
+            'state',
+            function ($q) use ($periodId) {
+                $q->where('period_id', $periodId);
+            }
+        )->count();
+
+
+        $analysis = MdpAnalysisResult::with([
+            'employee'
+        ])
+            ->where('period_id', $periodId)
+            ->latest()
+            ->get();
+
+
+        $summary = [
+
+            'states' => $states,
+
+            'actions' => $actions,
+
+            'transitions' => $transitions,
+
+            'employees' => $analysis->count(),
+
+            'average_reward' => round(
+                $analysis->avg('reward') ?? 0,
+                2
+            ),
+
+        ];
+
+
+        return view('reports.mdp.summary', [
+
+            'summary' => $summary,
+
+            'results' => $analysis,
+
+            'periods' => Period::latest()->get(),
+
+            'selectedPeriod' => $periodId,
+
+        ]);
     }
 
     /**

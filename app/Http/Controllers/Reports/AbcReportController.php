@@ -16,19 +16,43 @@ class AbcReportController extends Controller
      */
     public function summary(Request $request)
     {
-        $data = $this->getData($request);
+        $periodId = $request->period_id
+            ?? Period::where('status', 'active')->value('id');
 
-        return view('reports.abc.summary', $data);
+        $abc = AbcResult::with([
+            'period',
+            'details.kpiMaster'
+        ])
+            ->where('period_id', $periodId)
+            ->latest()
+            ->first();
+
+        return view('reports.abc.summary', [
+
+            'abc' => $abc,
+
+            'periods' => Period::latest()->get(),
+
+            'selectedPeriod' => $periodId,
+
+        ]);
     }
 
     /**
      * ABC Fitness Result
      */
+
     public function fitness(Request $request)
     {
-        $data = $this->getData($request);
+        $results = AbcResult::with('period')
+            ->latest()
+            ->paginate(20);
 
-        return view('reports.abc.fitness', $data);
+        return view('reports.abc.fitness', [
+
+            'results' => $results,
+
+        ]);
     }
 
     /**
@@ -36,19 +60,39 @@ class AbcReportController extends Controller
      */
     public function iterations(Request $request)
     {
-        $data = $this->getData($request);
+        $results = AbcResult::with('period')
+            ->latest()
+            ->paginate(20);
 
-        return view('reports.abc.iterations', $data);
+        return view('reports.abc.iterations', compact('results'));
     }
-
     /**
      * Best Solution
      */
+
     public function bestSolution(Request $request)
     {
-        $data = $this->getData($request);
+        $periodId = $request->period_id
+            ?? Period::where('status', 'active')->value('id');
 
-        return view('reports.abc.best-solution', $data);
+        $abc = AbcResult::with([
+            'period',
+            'details.kpiMaster'
+        ])
+            ->where('period_id', $periodId)
+            ->where('is_best', true)
+            ->latest()
+            ->first();
+
+        return view('reports.abc.best-solution', [
+
+            'abc' => $abc,
+
+            'periods' => Period::latest()->get(),
+
+            'selectedPeriod' => $periodId,
+
+        ]);
     }
 
     /**
@@ -79,7 +123,7 @@ class AbcReportController extends Controller
         return [
 
             'results' => $query
-                ->orderByDesc('fitness')
+                // ->orderByDesc('abc_result_id')
                 ->paginate(20),
 
             'abcResult' => AbcResult::where('period_id', $periodId)
