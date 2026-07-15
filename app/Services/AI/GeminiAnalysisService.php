@@ -401,6 +401,96 @@ Analisis performa karyawan berdasarkan:
 - ABC Optimization
 - MDP Decision
 
+## Objective
+
+Lakukan evaluasi menyeluruh terhadap performa karyawan berdasarkan:
+
+1. KPI Score
+2. Artificial Bee Colony (ABC) Optimization Result
+3. Markov Decision Process (MDP) Decision Analysis
+
+Analisis harus bersifat:
+- Objektif
+- Profesional
+- Berbasis data
+- Berorientasi pada peningkatan kinerja
+- Tidak mengandung asumsi yang tidak didukung data
+
+=================================================
+DATA KARYAWAN
+=================================================
+Employee Code : {$employeeCode}
+
+Nama Karyawan : {$name}
+
+Departemen : {$department}
+
+Jabatan : {$position}
+
+=================================================
+KINERJA
+=================================================
+
+Nilai Rata-rata : {$result->average_score}
+
+Nilai Akhir : {$result->final_score}
+
+Grade : {$result->grade}
+
+Peringkat : {$result->rank}
+
+=================================================
+DETAIL KPI
+=================================================
+
+{$kpiText}
+
+=================================================
+HASIL OPTIMASI ABC
+=================================================
+
+{$abcText}
+
+=================================================
+HASIL ANALISIS MDP
+=================================================
+
+{$mdpText}
+
+=================================================
+RIWAYAT REWARD / PUNISHMENT
+=================================================
+
+{$reward}
+
+=================================================
+TUGAS
+=================================================
+
+Lakukan analisis mengenai:
+
+1. Ringkasan keseluruhan kinerja karyawan.
+
+2. Kelebihan karyawan.
+
+3. Kekurangan karyawan.
+
+4. Peluang peningkatan.
+
+5. Risiko.
+
+6. Rekomendasi secara rinci.
+
+7. Rekomendasi reward.
+
+8. Rekomendasi punishment (jika diperlukan).
+
+9. Skor AI keseluruhan (0-100).
+
+10. Tingkat keyakinan (0-100).
+
+PENTING 
+
 Gunakan hanya data yang diberikan.
 
 Berikan analisis singkat, objektif, profesional.
@@ -416,12 +506,19 @@ Jangan tambahkan penjelasan.
 Setiap field maksimal:
 
 summary 30 kata
+
 strengths 20 kata
+
 weaknesses 20 kata
+
 opportunities 20 kata
+
 risks 20 kata
+
 recommendation 30 kata
+
 reward_recommendation 15 kata
+
 punishment_recommendation 15 kata
 
 Format:
