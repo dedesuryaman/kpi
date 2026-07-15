@@ -28,6 +28,12 @@ class MdpTransitionProbability extends Model
         return $this->belongsTo(MdpState::class, 'to_state_id');
     }
 
+    public function state()
+    {
+        return $this->belongsTo(MdpState::class, 'to_state_id');
+    }
+
+
     public function action()
     {
         return $this->belongsTo(MdpAction::class);

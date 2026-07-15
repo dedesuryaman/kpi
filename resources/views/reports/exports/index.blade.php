@@ -105,8 +105,9 @@
                 <div class="list-group list-group-flush">
                     <a href="{{ route('reports.mdp.summary') }}" class="list-group-item">Decision Summary</a>
                     <a href="{{ route('reports.mdp.states') }}" class="list-group-item">State Analysis</a>
-                    <a href="{{ route('reports.mdp.actions') }}" class="list-group-item">Reward Analysis</a>
-                    <a href="{{ route('reports.mdp.rewards') }}" class="list-group-item">Transition Probability</a>
+                    <a href="{{ route('reports.mdp.actions') }}" class="list-group-item">Actions Analysis</a>
+                    <a href="{{ route('reports.mdp.rewards') }}" class="list-group-item">Reward Analysis</a>
+                    <a href="{{ route('reports.mdp.transitions') }}" class="list-group-item">Transition Probability</a>
                 </div>
             </div>
         </div>
@@ -119,16 +120,17 @@
                     AI Performance Analysis
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="#" class="list-group-item">AI Summary</a>
-                    <a href="#" class="list-group-item">Individual Analysis</a>
-                    <a href="#" class="list-group-item">Department Analysis</a>
-                    <a href="#" class="list-group-item">Development Recommendation</a>
+                    <a href="{{ route('reports.ai.summary') }}" class="list-group-item">AI Summary</a>
+                    <a href="{{ route('reports.ai.individual') }}" class="list-group-item">Individual Analysis</a>
+                    <a href="{{ route('reports.ai.department') }}" class="list-group-item">Department Analysis</a>
+                    <a href="{{ route('reports.ai.recommendations') }}" class="list-group-item">Development
+                        Recommendation</a>
                 </div>
             </div>
         </div>
 
         <!-- Reward -->
-        <div class="col-lg-6">
+        <!--div class="col-lg-6">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-danger text-white">
                     <i class="bi bi-award me-2"></i>
@@ -141,10 +143,10 @@
                     <a href="#" class="list-group-item">Statistics</a>
                 </div>
             </div>
-        </div>
+        </div-->
 
         <!-- Executive -->
-        <div class="col-lg-6">
+        <!--div class="col-lg-6">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
                     <i class="bi bi-briefcase me-2"></i>
@@ -157,7 +159,7 @@
                     <a href="#" class="list-group-item">Strategic KPI Report</a>
                 </div>
             </div>
-        </div>
+        </div-->
 
     </div>
 

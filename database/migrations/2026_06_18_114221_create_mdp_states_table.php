@@ -17,6 +17,8 @@ return new class extends Migration
 
             $table->string('code', 10)->unique();
 
+            $table->integer('period_id')->unsigned();
+
             $table->string('name');
 
             $table->decimal('min_score', 8, 2);

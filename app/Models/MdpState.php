@@ -10,6 +10,7 @@ class MdpState extends Model
     use HasFactory;
 
     protected $fillable = [
+        'period_id',
         'code',
         'name',
         'min_score',

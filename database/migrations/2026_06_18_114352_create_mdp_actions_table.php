@@ -17,6 +17,8 @@ return new class extends Migration
 
             $table->string('code', 20)->unique();
 
+            $table->integer('period_id')->unsigned();
+
             $table->string('name');
 
             $table->text('description')->nullable();

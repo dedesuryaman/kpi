@@ -77,6 +77,17 @@ class AiReportController extends Controller
             ->orderByDesc('final_score')
             ->paginate(20);
 
+        $departmentSummary = (clone $query)
+            ->get()
+            ->groupBy(fn($item) => $item->employee->department->name ?? 'No Department')
+            ->map(function ($items) {
+                return [
+                    'employees' => $items->count(),
+                    'average_score' => round($items->avg('final_score'), 2),
+                    'analyzed' => $items->whereNotNull('latestAiAnalysis')->count(),
+                ];
+            });
+
         return [
 
             'results' => $results,
@@ -89,18 +100,31 @@ class AiReportController extends Controller
 
             'selectedDepartment' => $departmentId,
 
+            'departmentSummary' => $departmentSummary,
+
+            // 'summary' => [
+
+            //     'totalEmployee' => $results->total(),
+
+            //     'analyzed' => $results->getCollection()
+            //         ->filter(fn($item) => $item->latestAiAnalysis)
+            //         ->count(),
+
+            //     'notAnalyzed' => $results->getCollection()
+            //         ->filter(fn($item) => !$item->latestAiAnalysis)
+            //         ->count(),
+
+            // ]
             'summary' => [
+                'totalEmployee' => (clone $query)->count(),
 
-                'totalEmployee' => $results->total(),
-
-                'analyzed' => $results->getCollection()
-                    ->filter(fn($item) => $item->latestAiAnalysis)
+                'analyzed' => (clone $query)
+                    ->whereHas('latestAiAnalysis')
                     ->count(),
 
-                'notAnalyzed' => $results->getCollection()
-                    ->filter(fn($item) => !$item->latestAiAnalysis)
+                'notAnalyzed' => (clone $query)
+                    ->whereDoesntHave('latestAiAnalysis')
                     ->count(),
-
             ]
 
         ];

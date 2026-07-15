@@ -289,189 +289,195 @@
 
 
 
-    <div class="card shadow-sm">
+    <div class="card shadow-sm border-0">
 
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0">
+                    <i class="bi bi-diagram-3-fill text-primary me-2"></i>
+                    MDP Decision Result
+                </h5>
+                <small class="text-muted">
+                    Markov Decision Process Recommendation
+                </small>
+            </div>
 
-        <div class="card-header">
-
-
-            <strong>
-
-                MDP Decision Result
-
-            </strong>
-
-
+            <span class="badge bg-primary">
+                {{ $results->count() }} Employees
+            </span>
         </div>
 
-
-
-        <div class="card-body">
-
+        <div class="card-body p-0">
 
             <div class="table-responsive">
 
-
-                <table class="table table-bordered table-hover">
-
+                <table class="table table-hover align-middle mb-0">
 
                     <thead class="table-light">
-
-
                         <tr>
-
-                            <th>#</th>
-
+                            <th width="60">#</th>
                             <th>Employee</th>
-
-                            <th>State</th>
-
-                            <th>Action</th>
-
-                            <th>Reward</th>
-
-                            <th>Status</th>
-
-
+                            <th>Performance State</th>
+                            <th>Recommended Action</th>
+                            <th class="text-center">Reward</th>
+                            <th class="text-center">Decision</th>
                         </tr>
-
-
                     </thead>
-
-
 
                     <tbody>
 
-
-
                         @forelse($results as $result)
 
+                        @php
 
+                        $state = is_array($result->state)
+                        ? $result->state
+                        : json_decode($result->state,true);
+
+                        $action = is_array($result->action)
+                        ? $result->action
+                        : json_decode($result->action,true);
+
+                        @endphp
 
                         <tr>
 
-
                             <td>
-
                                 {{ $loop->iteration }}
-
                             </td>
-
 
                             <td>
 
-                                {{ $result->employee->name ?? '-' }}
+                                <div class="fw-semibold">
+                                    {{ $result->employee->name }}
+                                </div>
 
                             </td>
 
-
                             <td>
 
-                                {{ $result->state ?? '-' }}
+                                @if($state)
 
-                            </td>
-
-
-                            <td>
-
-                                {{ $result->action ?? '-' }}
-
-                            </td>
-
-
-                            <td>
-
-                                {{ number_format($result->reward,2) }}
-
-                            </td>
-
-
-                            <td>
-
-
-                                @if($result->reward >= 80)
-
-
-                                <span class="badge bg-success">
-
-                                    Optimal
-
+                                <span class="badge bg-{{ $state['color'] }}">
+                                    {{ $state['code'] }}
                                 </span>
 
+                                <div class="small mt-1 fw-semibold">
+                                    {{ $state['name'] }}
+                                </div>
 
-                                @elseif($result->reward >= 60)
-
-
-                                <span class="badge bg-primary">
-
-                                    Good
-
-                                </span>
-
+                                <small class="text-muted">
+                                    {{ $state['min_score'] }} -
+                                    {{ $state['max_score'] }}
+                                </small>
 
                                 @else
 
-
-                                <span class="badge bg-warning text-dark">
-
-                                    Need Improvement
-
-                                </span>
-
+                                -
 
                                 @endif
 
+                            </td>
+
+                            <td>
+
+                                @if($action)
+
+                                <span class="badge bg-{{ $action['color'] }}">
+                                    {{ $action['code'] }}
+                                </span>
+
+                                <div class="small mt-1 fw-semibold">
+                                    {{ $action['name'] }}
+                                </div>
+
+                                @else
+
+                                -
+
+                                @endif
 
                             </td>
 
+                            <td class="text-center">
+
+                                @if($result->reward>=90)
+
+                                <span class="fw-bold text-success">
+                                    {{ number_format($result->reward,2) }}
+                                </span>
+
+                                @elseif($result->reward>=70)
+
+                                <span class="fw-bold text-primary">
+                                    {{ number_format($result->reward,2) }}
+                                </span>
+
+                                @else
+
+                                <span class="fw-bold text-warning">
+                                    {{ number_format($result->reward,2) }}
+                                </span>
+
+                                @endif
+
+                            </td>
+
+                            <td class="text-center">
+
+                                @if($result->reward>=80)
+
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                    Optimal
+                                </span>
+
+                                @elseif($result->reward>=60)
+
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-award-fill me-1"></i>
+                                    Good
+                                </span>
+
+                                @else
+
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
+                                    Need Improvement
+                                </span>
+
+                                @endif
+
+                            </td>
 
                         </tr>
 
-
-
                         @empty
-
 
                         <tr>
 
                             <td colspan="6" class="text-center py-5">
 
+                                <i class="bi bi-diagram-3 display-5 text-muted"></i>
 
-                                <i class="bi bi-diagram-2 display-5 text-muted"></i>
-
-
-                                <br><br>
-
-
-                                No MDP analysis result available.
-
+                                <div class="mt-3">
+                                    No MDP analysis result available.
+                                </div>
 
                             </td>
 
                         </tr>
 
-
                         @endforelse
-
-
 
                     </tbody>
 
-
                 </table>
-
 
             </div>
 
-
         </div>
-
 
     </div>
 
-
-
-</div>
-
-
-@endsection
+    @endsection

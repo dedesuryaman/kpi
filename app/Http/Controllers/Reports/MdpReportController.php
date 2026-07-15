@@ -113,9 +113,27 @@ class MdpReportController extends Controller
      */
     public function transitions(Request $request)
     {
-        $data = $this->getData($request);
+        $periodId = $request->period_id
+            ?? Period::where('status', 'active')->value('id');
 
-        return view('reports.mdp.transitions', $data);
+        $transitions = MdpTransitionProbability::with([
+            'fromState',
+            'toState',
+            'action'
+        ])
+            ->whereHas('fromState', function ($q) use ($periodId) {
+                $q->where('period_id', $periodId);
+            })
+            ->paginate(20);
+        return view('reports.mdp.transitions', [
+
+            'transitions' => $transitions,
+
+            'periods' => Period::latest()->get(),
+
+            'selectedPeriod' => $periodId,
+
+        ]);
     }
 
     /**
@@ -143,7 +161,7 @@ class MdpReportController extends Controller
         return [
 
             'results' => $query
-                ->orderByDesc('expected_reward')
+                ->orderByDesc('reward')
                 ->paginate(20),
 
             'periods' => Period::latest()->get(),
@@ -156,9 +174,9 @@ class MdpReportController extends Controller
 
             'summary' => [
                 'totalEmployee' => (clone $query)->count(),
-                'averageReward' => (clone $query)->avg('expected_reward'),
-                'maxReward'     => (clone $query)->max('expected_reward'),
-                'minReward'     => (clone $query)->min('expected_reward'),
+                'averageReward' => (clone $query)->avg('reward'),
+                'maxReward'     => (clone $query)->max('reward'),
+                'minReward'     => (clone $query)->min('reward'),
             ]
 
         ];

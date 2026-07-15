@@ -13,6 +13,7 @@ class MdpStateSeeder extends Seeder
 
             [
                 'code' => 'S1',
+                'period_id' => 1,
                 'name' => 'Critical',
                 'min_score' => 0,
                 'max_score' => 40,
@@ -22,6 +23,7 @@ class MdpStateSeeder extends Seeder
 
             [
                 'code' => 'S2',
+                'period_id' => 1,
                 'name' => 'Poor',
                 'min_score' => 40.01,
                 'max_score' => 60,
@@ -31,6 +33,7 @@ class MdpStateSeeder extends Seeder
 
             [
                 'code' => 'S3',
+                'period_id' => 1,
                 'name' => 'Good',
                 'min_score' => 60.01,
                 'max_score' => 80,
@@ -40,6 +43,7 @@ class MdpStateSeeder extends Seeder
 
             [
                 'code' => 'S4',
+                'period_id' => 1,
                 'name' => 'Excellent',
                 'min_score' => 80.01,
                 'max_score' => 100,
