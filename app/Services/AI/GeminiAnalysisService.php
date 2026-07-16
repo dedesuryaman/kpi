@@ -393,14 +393,10 @@ PROMPT;
 */
         return <<<PROMPT
 
-Anda adalah AI HR Consultant.
+Anda adalah seorang Konsultan HR Senior, Pakar KPI, Pakar Artificial Bee Colony (ABC), dan Pakar Markov Decision Process (MDP).
 
-Analisis performa karyawan berdasarkan:
-
-- KPI
-- ABC Optimization
-- MDP Decision
-
+Analisis kinerja karyawan berikut.
+        
 ## Objective
 
 Lakukan evaluasi menyeluruh terhadap performa karyawan berdasarkan:

@@ -34,7 +34,7 @@
                     <a href="{{ route('reports.master.kpi-master') }}" class="list-group-item">KPI Master</a>
                     <a href="{{ route('reports.master.kpi-indicators') }}" class="list-group-item">KPI Indicators</a>
                     <a href="{{ route('reports.master.kpi-targets') }}" class="list-group-item">KPI Targets</a>
-                    <a href="{{ route('reports.master.periods') }}" class="list-group-item">Periods</a>
+                    <!--a href="{{ route('reports.master.periods') }}" class="list-group-item">Periods</a-->
                 </div>
             </div>
         </div>

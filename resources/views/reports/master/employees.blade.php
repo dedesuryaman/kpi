@@ -21,20 +21,27 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
-                <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+            <a href="{{ route('reports.master.employees.excel', request()->query()) }}" class="btn btn-success">
+                <i class="fas fa-file-excel me-1"></i>
+                Export Excel
+
             </a>
 
-            <a href="#" class="btn btn-danger">
-                <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+            <a href="{{ route('reports.master.employees.pdf', request()->query()) }}" class="btn btn-danger">
+
+
+                <i class="fas fa-file-pdf me-1"></i>
+                Export PDF
+
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Print
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+
+                <i class="fas fa-arrow-left me-2"></i>
+
+                Back
+
+            </a>
 
         </div>
 
@@ -44,36 +51,58 @@
 
         <div class="card-body">
 
-            <div class="row mb-3">
+            <form method="GET">
 
-                <div class="col-md-4">
+                <div class="row g-3 mb-4">
 
-                    <input type="text" class="form-control" placeholder="Search employee...">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" placeholder="Search employee..."
+                            value="{{ request('search') }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="department_id" class="form-select">
+                            <option value="">All Department</option>
+
+                            @foreach($departments as $department)
+                            <option value="{{ $department->id }}" {{ request('department_id')==$department->id ?
+                                'selected' : '' }}>
+                                {{ $department->name }}
+                            </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="position_id" class="form-select">
+                            <option value="">All Position</option>
+
+                            @foreach($positions as $position)
+                            <option value="{{ $position->id }}" {{ request('position_id')==$position->id ? 'selected' :
+                                '' }}>
+                                {{ $position->name }}
+                            </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-flex gap-2">
+
+                        <button class="btn btn-primary flex-fill">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+
+                        <a href="{{ route('reports.master.employees') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo"></i>
+                        </a>
+
+                    </div>
 
                 </div>
 
-                <div class="col-md-3">
-
-                    <select class="form-select">
-
-                        <option>All Department</option>
-
-                    </select>
-
-                </div>
-
-                <div class="col-md-3">
-
-                    <select class="form-select">
-
-                        <option>All Position</option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
+            </form>
             <div class="table-responsive">
 
                 <table class="table table-hover align-middle">
@@ -114,25 +143,14 @@
 
                             <td>{{ $employee->department->name ?? '-' }}</td>
 
-                            <td>{{ $employee->division->name ?? '-' }}</td>
+                            <td>{{ $employee->department->division->name ?? '-' }}</td>
 
                             <td>{{ $employee->position->name ?? '-' }}</td>
 
                             <td>
 
-                                @if($employee->status)
+                                {{ $employee->employment_status ?? '-' }}
 
-                                <span class="badge bg-success">
-                                    Active
-                                </span>
-
-                                @else
-
-                                <span class="badge bg-secondary">
-                                    Inactive
-                                </span>
-
-                                @endif
 
                             </td>
 

@@ -11,7 +11,7 @@
         <div>
 
             <h4 class="fw-bold mb-1">
-                <i class="bi bi-diagram-3-fill text-primary me-2"></i>
+                <i class="fas fa-project-diagram text-primary me-2"></i>
                 Department Report
             </h4>
 
@@ -23,20 +23,23 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
-                <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+            <a href="{{ route('reports.master.departments.excel') }}" class="btn btn-success">
+                <i class="fas fa-file-excel me-1"></i>
+                Export Excel
             </a>
 
-            <a href="#" class="btn btn-danger">
-                <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+            <a href="{{ route('reports.master.departments.pdf') }}" class="btn btn-danger">
+                <i class="fas fa-file-pdf me-1"></i>
+                Export PDF
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Print
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+
+                <i class="fas fa-arrow-left me-2"></i>
+
+                Back
+
+            </a>
 
         </div>
 
@@ -46,15 +49,7 @@
 
         <div class="card-body">
 
-            <div class="row mb-3">
 
-                <div class="col-md-4">
-
-                    <input type="text" class="form-control" placeholder="Search department...">
-
-                </div>
-
-            </div>
 
             <div class="table-responsive">
 
@@ -65,9 +60,9 @@
                         <tr>
 
                             <th width="70">#</th>
-                            <th>Department Code</th>
+
                             <th>Department Name</th>
-                            <th>Description</th>
+                            <th>Division</th>
                             <th>Total Employees</th>
 
                         </tr>
@@ -84,16 +79,14 @@
                                 {{ $loop->iteration + ($departments->firstItem() - 1) }}
                             </td>
 
-                            <td>
-                                {{ $department->code }}
-                            </td>
+
 
                             <td>
                                 {{ $department->name }}
                             </td>
 
                             <td>
-                                {{ $department->description ?? '-' }}
+                                {{ $department->division->name ?? '-' }}
                             </td>
 
                             <td>

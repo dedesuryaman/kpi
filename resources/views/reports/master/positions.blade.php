@@ -23,20 +23,27 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
+            <a href="{{ route('reports.master.positions.excel', request()->query()) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+                Export Excel
+
             </a>
 
-            <a href="#" class="btn btn-danger">
+            <a href="{{ route('reports.master.positions.pdf', request()->query()) }}" class="btn btn-danger">
+
+
                 <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+                Export PDF
+
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Print
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left-circle me-2"></i>
+
+                Back
+
+            </a>
 
         </div>
 
@@ -65,7 +72,7 @@
                         <tr>
 
                             <th width="70">#</th>
-                            <th>Position Code</th>
+
                             <th>Position Name</th>
                             <th>Description</th>
                             <th>Total Employees</th>
@@ -84,9 +91,6 @@
                                 {{ $loop->iteration + ($positions->firstItem() - 1) }}
                             </td>
 
-                            <td>
-                                {{ $position->code }}
-                            </td>
 
                             <td>
                                 {{ $position->name }}
@@ -100,7 +104,7 @@
 
                                 <span class="badge bg-primary">
 
-                                    {{ $position->employees_count }}
+                                    {{ $position->employees->count() }}
 
                                 </span>
 

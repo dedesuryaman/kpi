@@ -141,11 +141,10 @@
                             <th>Employee</th>
                             <th>Department</th>
                             <th>Position</th>
-                            <th>Attendance</th>
-                            <th>Productivity</th>
-                            <th>Quality</th>
-                            <th>Discipline</th>
-                            <th>Innovation</th>
+                            <th>Score AVG</th>
+                            <th>Grade</th>
+                            <th>Rank</th>
+
                             <th>Final Score</th>
 
                         </tr>
@@ -184,33 +183,24 @@
 
                             <td>
 
-                                {{ number_format($result->attendance_score,2) }}
+                                {{ number_format($result->average_score,2) }}
+
+                            </td>
+
+
+
+                            <td>
+
+                                {{ $result->grade }}
 
                             </td>
 
                             <td>
 
-                                {{ number_format($result->productivity_score,2) }}
+                                {{ $result->rank }}
 
                             </td>
 
-                            <td>
-
-                                {{ number_format($result->quality_score,2) }}
-
-                            </td>
-
-                            <td>
-
-                                {{ number_format($result->discipline_score,2) }}
-
-                            </td>
-
-                            <td>
-
-                                {{ number_format($result->innovation_score,2) }}
-
-                            </td>
 
                             <td>
 

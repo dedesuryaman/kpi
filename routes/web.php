@@ -235,12 +235,47 @@ Route::middleware('auth')->group(function () {
         */
                 Route::prefix('master')->name('master.')->group(function () {
                     Route::get('/employees', [MasterReportController::class, 'employees'])->name('employees');
+                    Route::get('/employees/excel', [MasterReportController::class, 'employeesExcel'])
+                        ->name('employees.excel');
+                    Route::get('/employees/pdf', [MasterReportController::class, 'employeesPdf'])
+                        ->name('employees.pdf');
+
                     Route::get('/departments', [MasterReportController::class, 'departments'])->name('departments');
+                    Route::get('/departments/excel', [MasterReportController::class, 'departmentsExcel'])
+                        ->name('departments.excel');
+                    Route::get('/departments/pdf', [MasterReportController::class, 'departmentsPdf'])
+                        ->name('departments.pdf');
+
                     Route::get('/divisions', [MasterReportController::class, 'divisions'])->name('divisions');
+                    Route::get('/divisions/excel', [MasterReportController::class, 'divisionsExcel'])
+                        ->name('divisions.excel');
+                    Route::get('/divisions/pdf', [MasterReportController::class, 'divisionsPdf'])
+                        ->name('divisions.pdf');
+
                     Route::get('/positions', [MasterReportController::class, 'positions'])->name('positions');
+                    Route::get('/positions/excel', [MasterReportController::class, 'positionsExcel'])
+                        ->name('positions.excel');
+                    Route::get('/positions/pdf', [MasterReportController::class, 'positionsPdf'])
+                        ->name('positions.pdf');
+
                     Route::get('/kpi-master', [MasterReportController::class, 'kpiMaster'])->name('kpi-master');
+                    Route::get('/kpi-master/excel', [MasterReportController::class, 'kpiMasterExcel'])
+                        ->name('kpi-master.excel');
+                    Route::get('/kpi-master/pdf', [MasterReportController::class, 'kpiMasterPdf'])
+                        ->name('kpi-master.pdf');
+
                     Route::get('/kpi-indicators', [MasterReportController::class, 'kpiIndicators'])->name('kpi-indicators');
+                    Route::get('/kpi-indicators/excel', [MasterReportController::class, 'kpiIndicatorsExcel'])
+                        ->name('kpi-indicators.excel');
+                    Route::get('/kpi-indicators/pdf', [MasterReportController::class, 'kpiIndicatorsPdf'])
+                        ->name('kpi-indicators.pdf');
+
                     Route::get('/kpi-targets', [MasterReportController::class, 'kpiTargets'])->name('kpi-targets');
+                    Route::get('/kpi-targets/excel', [MasterReportController::class, 'kpiTargetsExcel'])
+                        ->name('kpi-targets.excel');
+                    Route::get('/kpi-targets/pdf', [MasterReportController::class, 'kpiTargetsPdf'])
+                        ->name('kpi-targets.pdf');
+
                     Route::get('/periods', [MasterReportController::class, 'periods'])->name('periods');
                 });
 
@@ -251,6 +286,12 @@ Route::middleware('auth')->group(function () {
         */
                 Route::prefix('assessment')->name('assessment.')->group(function () {
                     Route::get('/summary', [AssessmentReportController::class, 'summary'])->name('summary');
+                    Route::get('/summary/excel', [AssessmentReportController::class, 'assessmentExcel'])
+                        ->name('summary.excel');
+
+                    Route::get('/summary/pdf', [AssessmentReportController::class, 'assessmentPdf'])
+                        ->name('summary.pdf');
+
                     Route::get('/employee-scores', [AssessmentReportController::class, 'employeeScores'])->name('employee-scores');
                     Route::get('/department-scores', [AssessmentReportController::class, 'departmentScores'])->name('department-scores');
                     Route::get('/completion', [AssessmentReportController::class, 'completion'])->name('completion');

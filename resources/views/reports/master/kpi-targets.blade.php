@@ -23,20 +23,27 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
+            <a href="{{ route('reports.master.kpi-targets.excel', request()->query()) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+                Export Excel
+
             </a>
 
-            <a href="#" class="btn btn-danger">
+            <a href="{{ route('reports.master.kpi-targets.pdf', request()->query()) }}" class="btn btn-danger">
+
+
                 <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+                Export PDF
+
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Print
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left-circle me-2"></i>
+
+                Back
+
+            </a>
 
         </div>
 
@@ -46,31 +53,42 @@
 
         <div class="card-body">
 
-            <div class="row mb-3">
+            <form method="GET" action="{{ route('reports.master.kpi-targets') }}">
+                <div class="row mb-3">
 
-                <div class="col-md-4">
-                    <input type="text" class="form-control" placeholder="Search employee...">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" placeholder="Search employee..."
+                            value="{{ request('search') }}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <select name="period_id" class="form-select" onchange="this.form.submit()">
+
+                            <option value="">All Period</option>
+
+                            @foreach($periods as $period)
+                            <option value="{{ $period->id }}" {{ request('period_id')==$period->id ? 'selected' : '' }}>
+                                {{ $period->name }}
+                            </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+
+                    <div class="col-md-2">
+                        <a href="{{ route('reports.master.kpi-targets') }}" class="btn btn-secondary w-100">
+                            Reset
+                        </a>
+                    </div>
+
                 </div>
-
-                <div class="col-md-3">
-
-                    <select class="form-select">
-
-                        <option>All Period</option>
-
-                        @foreach($periods ?? [] as $period)
-
-                        <option value="{{ $period->id }}">
-                            {{ $period->name }}
-                        </option>
-
-                        @endforeach
-
-                    </select>
-
-                </div>
-
-            </div>
+            </form>
 
             <div class="table-responsive">
 
@@ -112,13 +130,13 @@
 
                             <td>
 
-                                {{ $target->kpiIndicator->kpiMaster->name ?? '-' }}
+                                {{ $target->indicator->master->name ?? '-' }}
 
                             </td>
 
                             <td>
 
-                                {{ $target->kpiIndicator->name ?? '-' }}
+                                {{ $target->indicator->name ?? '-' }}
 
                             </td>
 
@@ -126,7 +144,7 @@
 
                                 <span class="badge bg-info">
 
-                                    {{ $target->target }}
+                                    {{ $target->target_value }}
 
                                 </span>
 
@@ -134,7 +152,7 @@
 
                             <td>
 
-                                {{ number_format($target->weight,2) }} %
+                                {{ number_format($target->indicator->weight,2) }} %
 
                             </td>
 

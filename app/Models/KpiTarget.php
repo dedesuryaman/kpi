@@ -37,6 +37,12 @@ class KpiTarget extends Model
     {
         return $this->belongsTo(KpiIndicator::class);
     }
+    //atau
+    public function kpiIndicator()
+    {
+        return $this->belongsTo(KpiIndicator::class);
+    }
+
 
     /**
      * Periode KPI

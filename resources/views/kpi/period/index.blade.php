@@ -77,10 +77,9 @@
                                 @if($period->status === 'active')
                                 <span class="badge bg-success badge-soft">Active</span>
 
-                                @elseif($period->status === 'closed')
-                                <span class="badge bg-danger badge-soft">Closed</span>
+
                                 @else
-                                <span class="badge bg-secondary badge-soft">Draft</span>
+                                <span class="badge bg-secondary badge-soft">Disabled</span>
                                 @endif
                             </td>
 

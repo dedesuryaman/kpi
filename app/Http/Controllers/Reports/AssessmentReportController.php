@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Period;
 use App\Models\Department;
 use App\Models\EmployeePerformanceResult;
+use App\Models\KpiScore;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AssessmentReportExport;
 
 class AssessmentReportController extends Controller
 {
@@ -20,12 +24,49 @@ class AssessmentReportController extends Controller
         return view('reports.assessment.summary', $data);
     }
 
+    public function assessmentExcel(Request $request)
+    {
+        return Excel::download(
+            new AssessmentReportExport($request),
+            'assessment-report.xlsx'
+        );
+    }
+
+    public function assessmentPdf(Request $request)
+    {
+        $periodId = $request->period_id
+            ?? Period::where('status', 'active')->value('id');
+
+        $departmentId = $request->department_id;
+
+        $query = EmployeePerformanceResult::with([
+            'employee.department'
+        ])
+            ->where('period_id', $periodId);
+
+        if ($departmentId) {
+            $query->whereHas('employee', function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+        $results = $query->get();
+
+        $pdf = Pdf::loadView(
+            'reports.assessment.pdf.assessments',
+            compact('results')
+        )->setPaper('a4', 'landscape');
+
+        return $pdf->stream('assessment-report.pdf');
+    }
+
+
     /**
      * Employee KPI Scores
      */
     public function employeeScores(Request $request)
     {
         $data = $this->getData($request);
+
 
         return view('reports.assessment.employee-scores', $data);
     }

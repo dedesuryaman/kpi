@@ -23,20 +23,27 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
+            <a href="{{ route('reports.master.kpi-master.excel', request()->query()) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+                Export Excel
+
             </a>
 
-            <a href="#" class="btn btn-danger">
+            <a href="{{ route('reports.master.kpi-master.pdf', request()->query()) }}" class="btn btn-danger">
+
+
                 <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+                Export PDF
+
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Print
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left-circle me-2"></i>
+
+                Back
+
+            </a>
 
         </div>
 
@@ -46,15 +53,7 @@
 
         <div class="card-body">
 
-            <div class="row mb-3">
 
-                <div class="col-md-4">
-
-                    <input type="text" class="form-control" placeholder="Search KPI master...">
-
-                </div>
-
-            </div>
 
             <div class="table-responsive">
 
@@ -65,9 +64,9 @@
                         <tr>
 
                             <th width="70">#</th>
-                            <th>KPI Code</th>
+
                             <th>KPI Name</th>
-                            <th>Weight (%)</th>
+
                             <th>Total Indicators</th>
                             <th>Status</th>
 
@@ -85,23 +84,17 @@
                                 {{ $loop->iteration + ($masters->firstItem() - 1) }}
                             </td>
 
-                            <td>
-                                {{ $master->code }}
-                            </td>
 
                             <td>
                                 {{ $master->name }}
                             </td>
 
-                            <td>
-                                {{ number_format($master->weight,2) }} %
-                            </td>
 
                             <td>
 
                                 <span class="badge bg-primary">
 
-                                    {{ $master->indicators_count }}
+                                    {{ $master->indicators->count() }}
 
                                 </span>
 

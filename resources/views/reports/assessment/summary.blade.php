@@ -23,20 +23,23 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
+            <a href="{{ route('reports.assessment.summary.excel', request()->query()) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+                Export Excel
             </a>
 
-            <a href="#" class="btn btn-danger">
+            <a href="{{ route('reports.assessment.summary.pdf', request()->query()) }}" class="btn btn-danger">
                 <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+                Export PDF
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Print
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left-circle me-2"></i>
+
+                Back
+
+            </a>
 
         </div>
 

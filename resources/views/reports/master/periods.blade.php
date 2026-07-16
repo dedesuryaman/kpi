@@ -71,7 +71,7 @@
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Status</th>
-                            <th>Description</th>
+
 
                         </tr>
 
@@ -115,27 +115,18 @@
                                     Active
                                 </span>
 
-                                @elseif($period->status == 'closed')
-
-                                <span class="badge bg-danger">
-                                    Closed
-                                </span>
 
                                 @else
 
                                 <span class="badge bg-secondary">
-                                    {{ ucfirst($period->status) }}
+                                    Disabled
                                 </span>
 
                                 @endif
 
                             </td>
 
-                            <td>
 
-                                {{ $period->description ?? '-' }}
-
-                            </td>
 
                         </tr>
 

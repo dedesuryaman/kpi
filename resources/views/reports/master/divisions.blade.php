@@ -23,20 +23,30 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
+
+
+            <a href="{{ route('reports.master.divisions.excel', request()->query()) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+                Export Excel
+
             </a>
 
-            <a href="#" class="btn btn-danger">
+            <a href="{{ route('reports.master.divisions.pdf', request()->query()) }}" class="btn btn-danger">
+
+
                 <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+                Export PDF
+
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>
-                Print
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+
+                <i class="bi bi-arrow-left-circle me-2"></i>
+
+                Back
+
+            </a>
+
 
         </div>
 
@@ -46,15 +56,7 @@
 
         <div class="card-body">
 
-            <div class="row mb-3">
 
-                <div class="col-md-4">
-
-                    <input type="text" class="form-control" placeholder="Search division...">
-
-                </div>
-
-            </div>
 
             <div class="table-responsive">
 
@@ -65,7 +67,7 @@
                         <tr>
 
                             <th width="70">#</th>
-                            <th>Division Code</th>
+
                             <th>Division Name</th>
                             <th>Description</th>
                             <th>Total Employees</th>
@@ -84,9 +86,7 @@
                                 {{ $loop->iteration + ($divisions->firstItem() - 1) }}
                             </td>
 
-                            <td>
-                                {{ $division->code }}
-                            </td>
+
 
                             <td>
                                 {{ $division->name }}
@@ -100,7 +100,7 @@
 
                                 <span class="badge bg-primary">
 
-                                    {{ $division->employees_count }}
+                                    {{ $division->employees->count() }}
 
                                 </span>
 

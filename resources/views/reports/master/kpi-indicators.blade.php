@@ -23,22 +23,27 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
+            <a href="{{ route('reports.master.kpi-indicators.excel', request()->query()) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+                Export Excel
+
             </a>
 
-            <a href="#" class="btn btn-danger">
+            <a href="{{ route('reports.master.kpi-indicators.pdf', request()->query()) }}" class="btn btn-danger">
+
+
                 <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+                Export PDF
+
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
 
-                <i class="bi bi-printer me-1"></i>
-                Print
+                <i class="bi bi-arrow-left-circle me-2"></i>
 
-            </button>
+                Back
+
+            </a>
 
         </div>
 
@@ -48,15 +53,6 @@
 
         <div class="card-body">
 
-            <div class="row mb-3">
-
-                <div class="col-md-4">
-
-                    <input type="text" class="form-control" placeholder="Search KPI indicator...">
-
-                </div>
-
-            </div>
 
             <div class="table-responsive">
 
@@ -67,11 +63,12 @@
                         <tr>
 
                             <th width="60">#</th>
-                            <th>Indicator Code</th>
+
                             <th>KPI Master</th>
                             <th>Indicator Name</th>
                             <th>Weight (%)</th>
-                            <th>Target</th>
+                            <th>Min Score</th>
+                            <th>Max Score</th>
                             <th>Status</th>
 
                         </tr>
@@ -88,9 +85,7 @@
                                 {{ $loop->iteration + ($indicators->firstItem() - 1) }}
                             </td>
 
-                            <td>
-                                {{ $indicator->code }}
-                            </td>
+
 
                             <td>
                                 {{ $indicator->kpiMaster->name ?? '-' }}
@@ -105,12 +100,16 @@
                             </td>
 
                             <td>
-                                {{ $indicator->target ?? '-' }}
+                                {{ $indicator->min_score ?? '-' }}
+                            </td>
+
+                            <td>
+                                {{ $indicator->max_score ?? '-' }}
                             </td>
 
                             <td>
 
-                                @if($indicator->status)
+                                @if($indicator->is_active)
 
                                 <span class="badge bg-success">
                                     Active
