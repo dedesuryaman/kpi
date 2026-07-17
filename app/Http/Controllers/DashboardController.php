@@ -396,7 +396,7 @@ class DashboardController extends Controller
 			->when($activePeriod, function ($query) use ($activePeriod) {
 				$query->where('period_id', $activePeriod->id);
 			})
-			->where('approval_status', 'Pending')
+			->where('approval_status', 'Waiting')
 			->latest()
 			->take(10)
 			->get();

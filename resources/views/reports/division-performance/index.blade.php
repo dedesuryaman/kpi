@@ -249,7 +249,7 @@
 
         <div class="col-lg-8">
 
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 mb-3">
 
                 <div class="card-header bg-white">
 
@@ -438,6 +438,29 @@
 
             </div>
 
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="mb-0 fw-bold">
+
+                        Average KPI by Division
+
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <canvas id="divisionBarChart" height="230">
+
+                    </canvas>
+
+                </div>
+
+            </div>
+
         </div>
 
 
@@ -528,35 +551,7 @@
     </div>
 
 
-    <div class="row mt-4">
 
-        <div class="col-lg-12">
-
-            <div class="card shadow-sm border-0">
-
-                <div class="card-header bg-white">
-
-                    <h5 class="mb-0 fw-bold">
-
-                        Average KPI by Division
-
-                    </h5>
-
-                </div>
-
-                <div class="card-body">
-
-                    <canvas id="divisionBarChart" height="90">
-
-                    </canvas>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
 </div>
 
 @endsection

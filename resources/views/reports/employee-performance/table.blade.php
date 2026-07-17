@@ -4,15 +4,18 @@
 
         <thead class="table-light">
             <tr class="text-center">
-                <th width="70">Rank</th>
                 <th width="70">No</th>
+
+
                 <th>Employee Code</th>
                 <th>Employee Name</th>
                 <th>Department</th>
                 <th>Position</th>
                 <th width="120">Average Score</th>
                 <th width="120">Final Score</th>
+                <th width="70">Rank</th>
                 <th width="100">Grade</th>
+                <th width="140">Period</th>
             </tr>
         </thead>
 
@@ -30,9 +33,7 @@
 
             <tr>
 
-                <td class="text-center fw-bold">
-                    {{ $result->rank }}
-                </td>
+
 
                 <td class="text-center">
                     {{ $loop->iteration }}
@@ -61,7 +62,9 @@
                 <td class="text-end fw-bold">
                     {{ number_format($result->final_score, 2) }}
                 </td>
-
+                <td class="text-center fw-bold">
+                    {{ $result->rank }}
+                </td>
                 <td class="text-center">
 
                     @switch($result->grade)
@@ -84,7 +87,9 @@
                     @endswitch
 
                 </td>
-
+                <td>
+                    {{ $result->period?->name }}
+                </td>
             </tr>
 
             @empty
@@ -109,7 +114,7 @@
 
             <tr>
 
-                <th colspan="7" class="text-end">
+                <th colspan="6" class="text-end">
 
                     Average Final Score
 
@@ -121,7 +126,7 @@
 
                 </th>
 
-                <th></th>
+                <th colspan="3"></th>
 
             </tr>
 

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\Exports\PerformanceSummaryReportExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EmployeePerformanceResult;
 use App\Models\Department;
 use App\Models\Period;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PerformanceReportController extends Controller
 {
@@ -19,6 +22,32 @@ class PerformanceReportController extends Controller
             'reports.performance.summary',
             $this->getPerformanceData($request)
         );
+    }
+
+    public function summaryExcel(Request $request)
+    {
+        return Excel::download(
+            new PerformanceSummaryReportExport($request),
+            'performance_summary.xlsx'
+        );
+    }
+    
+    public function summaryPdf(Request $request)
+    {
+        $data = $this->getPerformanceData($request, false);
+
+        $period = Period::find($data['selectedPeriod']);
+
+        $pdf = Pdf::loadView(
+            'reports.performance.pdf.summary',
+            [
+                'results' => $data['results'],
+                'summary' => $data['summary'],
+                'period' => $period
+            ]
+        )->setPaper('a4', 'landscape');
+
+        return $pdf->stream('performance_summary.pdf');
     }
 
     /**
@@ -149,7 +178,7 @@ class PerformanceReportController extends Controller
     /**
      * Common Query
      */
-    private function getPerformanceData(Request $request): array
+    private function getPerformanceData(Request $request, bool $paginate = true): array
     {
         $periodId = $request->period_id
             ?? Period::where('status', 'active')->value('id');
@@ -159,9 +188,11 @@ class PerformanceReportController extends Controller
         $query = EmployeePerformanceResult::with([
             'employee.department',
             'employee.position',
+            'abcResult',
+            'mdpResult',
+            'latestAiAnalysis',
             'latestRewardRecommendation'
-        ])
-            ->where('period_id', $periodId);
+        ])->where('period_id', $periodId);
 
         if ($departmentId) {
             $query->whereHas('employee', function ($q) use ($departmentId) {
@@ -169,7 +200,6 @@ class PerformanceReportController extends Controller
             });
         }
 
-        // Clone query agar tidak mengganggu query utama
         $summaryQuery = clone $query;
 
         $summary = [
@@ -179,25 +209,17 @@ class PerformanceReportController extends Controller
             'lowest'    => round((clone $query)->min('final_score') ?? 0, 2),
         ];
 
-        $results = $query
-            ->orderByDesc('final_score')
-            ->paginate(20)
-            ->withQueryString();
+        $results = $paginate
+            ? $query->orderByDesc('final_score')->paginate(20)->withQueryString()
+            : $query->orderByDesc('final_score')->get();
 
         return [
-
             'results' => $results,
-
             'summary' => $summary,
-
             'periods' => Period::latest()->get(),
-
             'departments' => Department::orderBy('name')->get(),
-
             'selectedPeriod' => $periodId,
-
             'selectedDepartment' => $departmentId,
-
         ];
     }
 }

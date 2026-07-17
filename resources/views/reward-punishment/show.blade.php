@@ -17,6 +17,14 @@
 
         color: #fff;
 
+        background: url('{{ asset("assets/images/bg-profile.png") }}') center center no-repeat;
+        background-size: cover;
+
+
+        border-radius: 10px;
+
+
+
     }
 
     .metric-card {
@@ -99,7 +107,7 @@
 @section('content')
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
 
         <div>
 
@@ -119,21 +127,13 @@
 
         </div>
 
-        <div>
 
+        <div class="d-flex flex-wrap justify-content-center justify-content-md-end gap-2">
             <a href="{{ route('reward-punishment.reward') }}" class="btn btn-light border">
 
                 <i class="fa fa-arrow-left me-2"></i>
 
                 Back
-
-            </a>
-
-            <a href="{{ route('reward-punishment.print',$result) }}" target="_blank" class="btn btn-dark">
-
-                <i class="fa fa-print me-2"></i>
-
-                Print
 
             </a>
 
@@ -185,7 +185,7 @@
 
                     <div class="d-flex align-items-center">
 
-                        <div class="avatar-xl">
+                        <div class="avatar-xl d-none d-md-flex align-items-center justify-content-center">
 
                             {{ strtoupper(substr($result->employee->name,0,1)) }}
 
@@ -205,7 +205,7 @@
 
                             </div>
 
-                            <div class="mt-3">
+                            <div class="mt-3 mb-2">
 
                                 <span class="badge bg-light text-dark">
 
@@ -219,7 +219,7 @@
 
                                 </span>
 
-                                <span class="badge bg-success">
+                                <span class="badge bg-success mb-2">
 
                                     Rank #{{ $result->rank }}
 
@@ -233,24 +233,21 @@
 
                                 @if(!$recommendation)
 
-                                <div
-                                    class="badge bg-warning-subtle text-warning-emphasis border border-warning px-3 py-2 rounded-pill">
+                                <div class="badge bg-warning-subtle text-warning-emphasis border border-warning  ">
                                     <i class="fa fa-hourglass-half me-2"></i>
                                     Waiting for HR Approval
                                 </div>
 
                                 @elseif($recommendation->status == 'Approved')
 
-                                <div
-                                    class="badge bg-success-subtle text-success-emphasis border border-success px-3 py-2 rounded-pill">
+                                <div class="badge bg-success-subtle text-success-emphasis border border-success    ">
                                     <i class="fa fa-circle-check me-2"></i>
                                     Approved by HR
                                 </div>
 
                                 @elseif($recommendation->status == 'Rejected')
 
-                                <div
-                                    class="badge bg-danger-subtle text-danger-emphasis border border-danger px-3 py-2 rounded-pill">
+                                <div class="badge bg-danger-subtle text-danger-emphasis border border-danger   ">
                                     <i class="fa fa-circle-xmark me-2"></i>
                                     Recommendation Rejected
                                 </div>
@@ -258,7 +255,7 @@
                                 @else
 
                                 <div
-                                    class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary px-3 py-2 rounded-pill">
+                                    class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary   ">
                                     <i class="fa fa-clock me-2"></i>
                                     Under Review
                                 </div>
@@ -275,7 +272,7 @@
 
                 </div>
 
-                <div class="col-lg-4 text-end">
+                <div class="col-lg-4 text-center text-lg-end ">
 
                     <div class="display-3 fw-bold">
 

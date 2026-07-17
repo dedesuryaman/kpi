@@ -293,8 +293,38 @@ Route::middleware('auth')->group(function () {
                         ->name('summary.pdf');
 
                     Route::get('/employee-scores', [AssessmentReportController::class, 'employeeScores'])->name('employee-scores');
+                    Route::get(
+                        '/employee-scores/excel',
+                        [AssessmentReportController::class, 'employeeScoresExcel']
+                    )->name('employee-scores.excel');
+
+                    Route::get(
+                        '/employee-scores/pdf',
+                        [AssessmentReportController::class, 'employeeScoresPdf']
+                    )->name('employee-scores.pdf');
+
                     Route::get('/department-scores', [AssessmentReportController::class, 'departmentScores'])->name('department-scores');
+                    Route::get(
+                        '/department-scores/excel',
+                        [AssessmentReportController::class, 'departmentScoresExcel']
+                    )->name('department-scores.excel');
+
+                    Route::get(
+                        '/department-scores/pdf',
+                        [AssessmentReportController::class, 'departmentScoresPdf']
+                    )->name('department-scores.pdf');
+
                     Route::get('/completion', [AssessmentReportController::class, 'completion'])->name('completion');
+                    Route::get(
+                        '/completion/excel',
+                        [AssessmentReportController::class, 'assessmentCompletionExcel']
+                    )->name('completion.excel');
+
+                    Route::get(
+                        '/completion/pdf',
+                        [AssessmentReportController::class, 'assessmentCompletionPdf']
+                    )->name('completion.pdf');
+
                     Route::get('/monthly', [AssessmentReportController::class, 'monthly'])->name('monthly');
                     Route::get('/annual', [AssessmentReportController::class, 'annual'])->name('annual');
                 });
@@ -306,8 +336,29 @@ Route::middleware('auth')->group(function () {
         */
                 Route::prefix('performance')->name('performance.')->group(function () {
                     Route::get('/summary', [PerformanceReportController::class, 'summary'])->name('summary');
+                    Route::get(
+                        '/summary/excel',
+                        [PerformanceReportController::class, 'summaryExcel']
+                    )->name('summary.excel');
+
+                    Route::get(
+                        '/summary/pdf',
+                        [PerformanceReportController::class, 'summaryPdf']
+                    )->name('summary.pdf');
+
                     Route::get('/detail', [PerformanceReportController::class, 'detail'])->name('detail');
                     Route::get('/ranking', [PerformanceReportController::class, 'ranking'])->name('ranking');
+                    Route::get(
+                        '/ranking/excel',
+                        [PerformanceReportController::class, 'rankingExcel']
+                    )->name('ranking.excel');
+
+                    Route::get(
+                        '/ranking/pdf',
+                        [PerformanceReportController::class, 'rankingPdf']
+                    )->name('ranking.pdf');
+
+
                     Route::get('/top', [PerformanceReportController::class, 'top'])->name('top');
                     Route::get('/lowest', [PerformanceReportController::class, 'lowest'])->name('lowest');
                     Route::get('/department', [PerformanceReportController::class, 'department'])->name('department');
@@ -512,6 +563,17 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/punishment', [RewardPunishmentController::class, 'punishment'])
                 ->name('punishment');
+
+            Route::get(
+                '/punishment/{result}/review',
+                [RewardPunishmentController::class, 'review']
+            )->name('punishment.review');
+
+            Route::post(
+                '/punishment/{result}/review',
+                [RewardPunishmentController::class, 'storeReview']
+            )->name('punishment.review.store');
+
 
             Route::get('/history', [RewardPunishmentController::class, 'history'])
                 ->name('history');

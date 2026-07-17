@@ -196,6 +196,8 @@
 
                         <th>Recommendation</th>
 
+                        <th>Punishment</th>
+
                         <th></th>
 
                     </tr>
@@ -269,13 +271,15 @@
                             @endif
 
                         </td>
-
+                        <td>
+                            {{ Str::title(str_replace('_', ' ', optional($item->punishmentHistory)->type ?? '')) }}
+                        </td>
                         <td>
 
-                            <a href="#" class="btn btn-outline-primary btn-sm">
 
-                                Review
-
+                            <a href="{{ route('reward-punishment.punishment.review', $item->id) }}"
+                                class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye"></i> Review
                             </a>
 
                         </td>

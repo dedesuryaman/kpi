@@ -30,6 +30,16 @@ class EmployeePerformanceResult extends Model
 
     ];
 
+    public function abcResult()
+    {
+        return $this->hasOne(AbcResult::class, 'id', 'period_id');
+    }
+
+    public function mdpResult()
+    {
+        return $this->hasOne(MdpAnalysisResult::class, 'employee_performance_result_id', 'id');
+    }
+
     public function employee()
     {
         return $this->belongsTo(Employee::class);
@@ -53,6 +63,13 @@ class EmployeePerformanceResult extends Model
         return $this->hasMany(RewardRecommendation::class, 'performance_result_id');
     }
 
+
+    public function getPunishmentHistoryAttribute()
+    {
+        return PunishmentHistory::where('employee_id', $this->employee_id)
+            ->where('period_id', $this->period_id)
+            ->first();
+    }
 
     public function latestRewardRecommendation()
     {

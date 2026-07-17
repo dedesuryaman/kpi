@@ -54,8 +54,8 @@
                         Scores</a>
                     <a href="{{ route('reports.assessment.completion') }}" class="list-group-item">Completion
                         Status</a>
-                    <a href="{{ route('reports.assessment.monthly') }}" class="list-group-item">Monthly Report</a>
-                    <a href="{{ route('reports.assessment.annual') }}" class="list-group-item">Annual Report</a>
+                    <!--a href="{{ route('reports.assessment.monthly') }}" class="list-group-item">Monthly Report</a>
+                    <a href="{{ route('reports.assessment.annual') }}" class="list-group-item">Annual Report</a-->
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="list-group list-group-flush">
                     <a href="{{ route('reports.performance.summary') }}" class="list-group-item">Performance Summary</a>
-                    <a href="{{ route('reports.performance.detail') }}" class="list-group-item">Performance Detail</a>
+                    <!--a href="{{ route('reports.performance.detail') }}" class="list-group-item">Performance Detail</a-->
                     <a href="{{ route('reports.performance.ranking') }}" class="list-group-item">Performance Ranking</a>
                     <a href="{{ route('reports.performance.top') }}" class="list-group-item">Top Employees</a>
                     <a href="{{ route('reports.performance.lowest') }}" class="list-group-item">Lowest Employees</a>

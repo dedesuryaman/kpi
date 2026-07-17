@@ -6,6 +6,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Models\EmployeePerformanceResult;
 use App\Models\Period;
+use App\Models\PunishmentHistory;
 use App\Models\RewardRecommendation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -335,7 +336,8 @@ class RewardPunishmentController extends Controller
             ->with([
                 'employee.department',
                 'employee.position',
-                'period'
+                'period',
+
             ])
 
             ->where('approval_status', 'Approved')
@@ -377,6 +379,24 @@ class RewardPunishmentController extends Controller
         $departments = Department::orderBy('name')->get();
         $periods     = Period::latest()->get();
 
+        $histories = PunishmentHistory::whereIn(
+            'employee_id',
+            $punishments->pluck('employee_id')
+        )->whereIn(
+            'period_id',
+            $punishments->pluck('period_id')
+        )->get()->keyBy(function ($item) {
+            return $item->employee_id . '-' . $item->period_id;
+        });
+        $punishments->getCollection()->transform(function ($item) use ($histories) {
+
+            $key = $item->employee_id . '-' . $item->period_id;
+
+            $item->punishmentHistory = $histories->get($key);
+
+            return $item;
+        });
+
         return view(
             'reward-punishment.punishment',
             compact(
@@ -386,6 +406,64 @@ class RewardPunishmentController extends Controller
             )
         );
     }
+
+    public function review(EmployeePerformanceResult $result)
+    {
+        $result->load([
+            'employee.department',
+            'period',
+            'abcResult',
+            'mdpResult',
+            'aiAnalysis',
+        ]);
+
+
+        $review = PunishmentHistory::firstOrNew([
+            'employee_id' => $result->employee_id,
+            'period_id' => $result->period_id,
+
+        ]);
+
+        return view(
+            'reward-punishment.review',
+            compact('result', 'review')
+        );
+    }
+
+
+    public function storeReview(Request $request, EmployeePerformanceResult $result)
+    {
+        $request->validate([
+            'type' => 'required',
+            'severity' => 'required',
+            'notes' => 'nullable'
+        ]);
+
+        PunishmentHistory::updateOrCreate(
+
+            [
+                'employee_id' => $result->employee_id,
+                'period_id'   => $result->period_id,
+            ],
+
+            [
+                'type'        => $request->type,
+                'severity'    => $request->severity,
+                'notes'       => $request->notes,
+                'approved_by' => auth()->id(),
+            ]
+
+        );
+
+        return redirect()
+            ->route(
+                'reward-punishment.punishment.review',
+                $result->id
+            )
+            ->with('success', 'Punishment review saved.');
+    }
+
+
 
     public function history() {}
 

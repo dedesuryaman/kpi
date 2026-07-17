@@ -36,7 +36,7 @@
 
         <div class="btn-group">
 
-
+            <!--
             <a href="#" class="btn btn-success">
 
                 <i class="bi bi-file-earmark-excel"></i>
@@ -60,7 +60,7 @@
 
             </button>
 
-
+        -->
         </div>
 
 
@@ -80,7 +80,7 @@
                 <div class="row">
 
 
-                    <div class="col-md-4">
+                    <div class="col-md-10">
 
 
                         <label class="form-label">

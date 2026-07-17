@@ -141,10 +141,9 @@
         <thead>
 
             <tr>
-
-                <th width="50">Rank</th>
-
                 <th width="60">No</th>
+
+
 
                 <th>Employee Code</th>
 
@@ -154,12 +153,12 @@
 
                 <th>Position</th>
 
-                <th width="120">Average Score</th>
+                <th width="40">Average Score</th>
 
-                <th width="120">Final Score</th>
-
+                <th width="40">Final Score</th>
+                <th width="50">Rank</th>
                 <th width="80">Grade</th>
-
+                <th width="120">Period</th>
             </tr>
 
         </thead>
@@ -174,11 +173,7 @@
 
             <tr>
 
-                <td class="text-center">
 
-                    {{ $result->rank }}
-
-                </td>
 
                 <td class="text-center">
 
@@ -231,7 +226,19 @@
                     {{ $result->grade }}
 
                 </td>
+                <td class="text-center">
 
+                    {{ $result->rank }}
+
+                </td>
+
+                <td class="text-center">
+
+                    {{ $result->period->name ?? ''
+
+                    }}
+
+                </td>
             </tr>
 
             @empty
@@ -256,7 +263,7 @@
 
             <tr>
 
-                <th colspan="7" class="text-right">
+                <th colspan="6" class="text-right">
 
                     Average Final Score
 
@@ -269,7 +276,8 @@
                 </th>
 
                 <th></th>
-
+                <th></th>
+                <th></th>
             </tr>
 
         </tfoot>

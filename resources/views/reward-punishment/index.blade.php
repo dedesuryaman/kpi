@@ -526,7 +526,7 @@
                     </a>
 
                 </div>
-
+                <!---
                 <div class="col-md-3">
 
                     <a href="{{ route('reward-punishment.history') }}" class="btn btn-primary w-100">
@@ -550,7 +550,7 @@
                     </button>
 
                 </div>
-
+            -->
             </div>
 
         </div>

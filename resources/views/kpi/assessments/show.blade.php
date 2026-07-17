@@ -149,9 +149,9 @@
 
             @endphp
 
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm mb-3">
 
-                <div class="card-header bg-{{ $color }} text-white text-center py-4">
+                <div class="card-header bg-{{ $color }} text-white text-center ">
 
                     <small class="text-uppercase">
                         Overall Performance
@@ -169,11 +169,11 @@
 
                 <div class="card-body">
 
-                    <div class="row g-3">
+                    <div class="row g-2">
 
                         <div class="col-6">
 
-                            <div class="border rounded p-3 text-center">
+                            <div class="border rounded  text-center">
 
                                 <small class="text-muted d-block">
                                     Indicators
@@ -189,7 +189,7 @@
 
                         <div class="col-6">
 
-                            <div class="border rounded p-3 text-center">
+                            <div class="border rounded  text-center">
 
                                 <small class="text-muted d-block">
                                     Weight Avg
@@ -205,7 +205,7 @@
 
                         <div class="col-6">
 
-                            <div class="border rounded p-3 text-center">
+                            <div class="border rounded  text-center">
 
                                 <small class="text-muted d-block">
                                     Highest Score
@@ -221,7 +221,7 @@
 
                         <div class="col-6">
 
-                            <div class="border rounded p-3 text-center">
+                            <div class="border rounded  text-center">
 
                                 <small class="text-muted d-block">
                                     Lowest Score
@@ -274,41 +274,6 @@
 
     @endphp
 
-    <div class="card border-0 shadow-sm mb-4">
-
-        <div class="card-header bg-white py-3">
-
-            <div class="d-flex justify-content-between align-items-center">
-
-                <div>
-
-                    <h4 class="fw-bold mb-1">
-
-                        <i class="fas fa-chart-pie text-primary me-2"></i>
-
-                        KPI Assessment Details
-
-                    </h4>
-
-                    <small class="text-muted">
-
-                        Performance evaluation grouped by KPI Master
-
-                    </small>
-
-                </div>
-
-                <span class="badge bg-primary fs-6 px-3 py-2">
-
-                    {{ $scores->count() }} Indicators
-
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
 
     @foreach($groupedScores as $masterName => $items)
 

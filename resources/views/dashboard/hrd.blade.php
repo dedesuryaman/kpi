@@ -133,142 +133,168 @@
         flex: 1;
 
     }
+
+    .stats-section {
+        background: url('{{ asset("assets/images/yurt6.jpg") }}') center center no-repeat;
+        background-size: cover;
+
+        padding: 25px;
+        border-radius: 10px;
+
+        margin-bottom: 30px;
+    }
+
+   
 </style>
 @endpush
 
 @section('content')
 
 <div class="container-fluid">
+    <div class="stats-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-1">
+                    <i class="bi bi-people-fill text-primary me-2"></i>
+                    HR Dashboard
+                </h3>
+                <small class="text-muted">
+                    Human Resource Performance Management
+                </small>
+            </div>
 
-    <h4 class="mb-4">
-        HR Dashboard
-    </h4>
+            <div>
+                <span class="badge rounded-pill bg-success px-3 py-2">
+                    <i class="bi bi-calendar-check me-1"></i>
+                    {{ $activePeriod->name }}
+                </span>
+            </div>
+        </div>
 
+        <div class="row  g-4">
 
-    <div class="row g-4">
+            <div class="col-xl-2 col-md-4">
 
-        <div class="col-xl-2 col-md-4">
+                <div class="stat-card bg-primary">
 
-            <div class="stat-card bg-primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
 
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
+                    <div>
+
+                        <small>Total Employee</small>
+
+                        <h2>{{ $totalEmployees }}</h2>
+
+                    </div>
+
                 </div>
 
-                <div>
+            </div>
 
-                    <small>Total Employee</small>
+            <div class="col-xl-2 col-md-4">
 
-                    <h2>{{ $totalEmployees }}</h2>
+                <div class="stat-card bg-success">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+
+                    <div>
+
+                        <small>Submitted</small>
+
+                        <h2>{{ $submitted }}</h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xl-2 col-md-4">
+
+                <div class="stat-card bg-warning">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+
+                    <div>
+
+                        <small>Pending</small>
+
+                        <h2>{{ $pending }}</h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xl-2 col-md-4">
+
+                <div class="stat-card bg-info">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <small>Approved</small>
+
+                        <h2>{{ $approved }}</h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xl-2 col-md-4">
+
+                <div class="stat-card bg-danger">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <small>Rejected</small>
+
+                        <h2>{{ $rejected }}</h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xl-2 col-md-4">
+
+                <div class="stat-card bg-dark">
+
+                    <div class="stat-icon">
+                        <i class="fas fa-user-minus"></i>
+                    </div>
+
+                    <div>
+
+                        <small>Not Submitted</small>
+
+                        <h2>{{ $notSubmitted }}</h2>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
-
-        <div class="col-xl-2 col-md-4">
-
-            <div class="stat-card bg-success">
-
-                <div class="stat-icon">
-                    <i class="fas fa-paper-plane"></i>
-                </div>
-
-                <div>
-
-                    <small>Submitted</small>
-
-                    <h2>{{ $submitted }}</h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-xl-2 col-md-4">
-
-            <div class="stat-card bg-warning">
-
-                <div class="stat-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-
-                <div>
-
-                    <small>Pending</small>
-
-                    <h2>{{ $pending }}</h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-xl-2 col-md-4">
-
-            <div class="stat-card bg-info">
-
-                <div class="stat-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-
-                <div>
-
-                    <small>Approved</small>
-
-                    <h2>{{ $approved }}</h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-xl-2 col-md-4">
-
-            <div class="stat-card bg-danger">
-
-                <div class="stat-icon">
-                    <i class="fas fa-times-circle"></i>
-                </div>
-
-                <div>
-
-                    <small>Rejected</small>
-
-                    <h2>{{ $rejected }}</h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-xl-2 col-md-4">
-
-            <div class="stat-card bg-dark">
-
-                <div class="stat-icon">
-                    <i class="fas fa-user-minus"></i>
-                </div>
-
-                <div>
-
-                    <small>Not Submitted</small>
-
-                    <h2>{{ $notSubmitted }}</h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
-
     <div class="row mt-4">
 
         <div class="col-lg-6">
@@ -328,9 +354,9 @@
 
                         </div>
 
-                        <div class="progress mt-2">
+                        <div class="progress mt-2" style=" height: 8px;">
 
-                            <div class="progress-bar
+                            <div class="progress-bar 
                                 @if($department->average_score>=90)
         
                                 bg-success
@@ -349,6 +375,7 @@
         
                                 @endif" style="width:{{ $department->average_score }}%">
                             </div>
+
 
                         </div>
 
@@ -624,7 +651,7 @@
 
                         <span class="badge bg-warning">
 
-                            Pending
+                            Waiting
 
                         </span>
 

@@ -122,13 +122,6 @@
 
 
 
-                        <button type="button" class="btn btn-dark">
-
-                            <i class="fa fa-file-excel me-2"></i>
-
-                            Export Excel
-
-                        </button>
 
                     </div>
 
@@ -513,11 +506,7 @@
 
                             </th>
 
-                            <th width="180">
 
-                                Department
-
-                            </th>
 
                             <th width="110" class="text-center">
 
@@ -548,7 +537,12 @@
                                 Status
 
                             </th>
+                            <th width="60" class="text-center">
 
+                                Reward
+
+
+                            </th>
                             <th width="180" class="text-center">
 
                                 Action
@@ -625,22 +619,22 @@
                                             {{ $reward->employee->name }}
 
                                         </div>
+                                        <div>
+                                            <small class="text-muted">
 
-                                        <small class="text-muted">
+                                                {{ $reward->employee->employee_code }}
 
-                                            {{ $reward->employee->employee_code }}
-
-                                        </small>
+                                            </small>
+                                        </div>
+                                        <div>
+                                            <snall>
+                                                {{ $reward->employee->department->name ?? '-' }}
+                                                </small>
+                                        </div>
 
                                     </div>
 
                                 </div>
-
-                            </td>
-
-                            <td>
-
-                                {{ $reward->employee->department->name ?? '-' }}
 
                             </td>
 
@@ -759,7 +753,9 @@
                                 @endswitch
 
                             </td>
-
+                            <td>
+                                {{ $reward->latestRewardRecommendation?->reward_type ?? 'N/A' }}
+                            </td>
                             <td class="text-center">
 
                                 <div class="btn-group">

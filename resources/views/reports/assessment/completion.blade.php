@@ -23,22 +23,20 @@
 
         <div class="btn-group">
 
-            <a href="#" class="btn btn-success">
+            <a href="{{ route('reports.assessment.completion.excel', request()->query()) }}" class="btn btn-success">
                 <i class="bi bi-file-earmark-excel me-1"></i>
-                Excel
+                Export Excel
             </a>
 
-            <a href="#" class="btn btn-danger">
+            <a href="{{ route('reports.assessment.completion.pdf', request()->query()) }}" class="btn btn-danger">
                 <i class="bi bi-file-earmark-pdf me-1"></i>
-                PDF
+                Export PDF
             </a>
 
-            <button class="btn btn-secondary" onclick="window.print()">
-
-                <i class="bi bi-printer me-1"></i>
-                Print
-
-            </button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i>
+                Back
+            </a>
 
         </div>
 
@@ -112,11 +110,12 @@
 
                             <th width="60">#</th>
                             <th>Department</th>
+                            <th>Division</th>
                             <th>Total Employees</th>
                             <th>Completed</th>
-                            <th>Pending</th>
+
+                            <th>Not Assessed</th>
                             <th>Completion (%)</th>
-                            <th>Status</th>
 
                         </tr>
 
@@ -124,15 +123,9 @@
 
                     <tbody>
 
-                        @forelse($departments as $department)
+                        @forelse($results as $department)
 
-                        @php
 
-                        $percentage = $department->employee_count > 0
-                        ? ($department->completed_count / $department->employee_count) * 100
-                        : 0;
-
-                        @endphp
 
                         <tr>
 
@@ -146,87 +139,40 @@
 
                                 <strong>
 
-                                    {{ $department->name }}
+                                    {{ $department->department_name }}
 
                                 </strong>
 
                             </td>
-
                             <td>
 
-                                {{ $department->employee_count }}
+                                {{ $department->division_name }}
+
+                            </td>
+                            <td>
+
+                                {{ $department->total_employee }}
 
                             </td>
 
                             <td>
 
-                                <span class="badge bg-success">
 
-                                    {{ $department->completed_count }}
+                                {{ $department->assessed_employee }}
 
-                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ $department->not_assessed_employee }}
 
                             </td>
 
                             <td>
 
-                                <span class="badge bg-warning text-dark">
-
-                                    {{ $department->employee_count - $department->completed_count }}
-
-                                </span>
-
-                            </td>
-
-                            <td width="250">
-
-                                <div class="progress" style="height:22px;">
-
-                                    <div class="progress-bar" style="width:{{ $percentage }}%;">
-
-                                        {{ number_format($percentage,1) }}%
-
-                                    </div>
-
-                                </div>
-
-                            </td>
-
-                            <td>
-
-                                @if($percentage==100)
-
-                                <span class="badge bg-success">
-
-                                    Completed
-
-                                </span>
-
-                                @elseif($percentage>=75)
-
-                                <span class="badge bg-primary">
-
-                                    Almost Complete
-
-                                </span>
-
-                                @elseif($percentage>=50)
-
-                                <span class="badge bg-warning text-dark">
-
-                                    In Progress
-
-                                </span>
-
-                                @else
-
-                                <span class="badge bg-danger">
-
-                                    Need Attention
-
-                                </span>
-
-                                @endif
+                                {{ number_format($department->completion_percentage ,2) }}
 
                             </td>
 
