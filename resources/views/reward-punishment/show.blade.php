@@ -702,7 +702,7 @@
 
                         <strong>
 
-                            {{ $result->employee->department->name }}
+                            {{ $result->employee->department->name ?? '-'}}
 
                         </strong>
 
