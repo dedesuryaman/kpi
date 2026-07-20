@@ -143,8 +143,6 @@
 
         margin-bottom: 30px;
     }
-
-   
 </style>
 @endpush
 
@@ -580,7 +578,7 @@
 
                         <div class="ms-3 flex-grow-1">
 
-                            <strong>{{ $item->employee->name }}</strong>
+                            <strong>{{ $item->employee->name ?? '-' }}</strong>
 
                             <div class="text-muted">
 
@@ -639,11 +637,11 @@
 
                         <div class="timeline-content">
 
-                            <strong>{{ $item->employee->name }}</strong>
+                            <strong>{{ $item->employee->name ?? '-' }}</strong>
 
                             <div class="text-muted">
 
-                                {{ $item->employee->department->name }}
+                                {{ $item->employee->department->name ?? '-' }}
 
                             </div>
 
