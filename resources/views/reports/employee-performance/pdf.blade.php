@@ -183,25 +183,25 @@
 
                 <td>
 
-                    {{ $result->employee->employee_code }}
+                    {{ $result->employee->employee_code ?? '' }}
 
                 </td>
 
                 <td>
 
-                    {{ $result->employee->name }}
+                    {{ $result->employee->name ?? ''}}
 
                 </td>
 
                 <td>
 
-                    {{ $result->employee->department?->name }}
+                    {{ $result->employee->department?->name ?? '' }}
 
                 </td>
 
                 <td>
 
-                    {{ $result->employee->position?->name }}
+                    {{ $result->employee->position?->name ?? '' }}
 
                 </td>
 

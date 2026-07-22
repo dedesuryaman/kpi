@@ -100,10 +100,10 @@ class EmployeePerformanceExport implements
         return [
             $result->rank,
             $this->no++,
-            $result->employee->employee_code,
+            $result->employee->employee_code ?? '-',
             $result->employee->name,
-            $result->employee->department?->name,
-            $result->employee->position?->name,
+            $result->employee->department?->name ?? '-',
+            $result->employee->position?->name ?? '-',
             $result->average_score,
             $result->final_score,
             $result->grade,

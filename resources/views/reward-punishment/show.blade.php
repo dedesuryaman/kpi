@@ -686,7 +686,7 @@
 
                         <strong>
 
-                            {{ $result->employee->employee_code }}
+                            {{ $result->employee->employee_code ?? '-'}}
 
                         </strong>
 

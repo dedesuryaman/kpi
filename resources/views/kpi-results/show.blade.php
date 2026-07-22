@@ -85,7 +85,7 @@
 
                             <div class="text-muted small">
                                 <i class="bi bi-person-badge"></i>
-                                {{ $result->employee->employee_code }}
+                                {{ $result->employee->employee_code ?? '-'}}
                             </div>
 
                             <div class="text-muted">

@@ -196,13 +196,13 @@
 
                 <td>
 
-                    {{ $result->employee->department?->name }}
+                    {{ $result->employee->department?->name  ?? '-'}}
 
                 </td>
 
                 <td>
 
-                    {{ $result->employee->position?->name }}
+                    {{ $result->employee->position?->name ?? '-'}}
 
                 </td>
 

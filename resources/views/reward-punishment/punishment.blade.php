@@ -222,13 +222,13 @@
 
                         <td>
 
-                            {{ $item->employee->department?->name }}
+                            {{ $item->employee->department?->name ?? '-' }}
 
                         </td>
 
                         <td>
 
-                            {{ $item->period->name }}
+                            {{ $item->period->name ?? '-' }}
 
                         </td>
 
